@@ -17,15 +17,13 @@ function App() {
       <Routes>
           <Route path='/' element={<Layout />}>
               <Route index element={<Dashboard />} />
-              <Route path="user-management" element={<UserManagement />} />
-              <Route path="movement" element={<Movement />} />
-              <Route path="products" element={<Products />} />
-              <Route path="inventory" element={<Inventory />} />
-              <Route path="*" element={<ErrorPage />} />
+              <Route path="/user-management" element={<UserManagement />} />
+              <Route path="/movement" element={<Movement />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/inventory" element={<Inventory />} />
+              <Route path="/*" element={<ErrorPage />} />
           </Route>
       </Routes>
-
-
   )
 }
 

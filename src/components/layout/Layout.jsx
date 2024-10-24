@@ -9,7 +9,10 @@ const Layout = () => {
         <div className="App">
             <Header />
             <Nav />
-            <Outlet />
+            <div className="right-0 w-9/12 h-full fixed py-20 pl-4"
+            style={{background: "#101923"}}>
+                <Outlet />
+            </div>
             <Footer />
         </div>
     );
