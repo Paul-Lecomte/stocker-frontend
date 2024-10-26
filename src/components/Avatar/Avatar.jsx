@@ -1,4 +1,6 @@
 import React from "react";
+import { useAuthStore } from "../../stores/authStore.js";
+import { useNavigate } from "react-router-dom";
 import {
     Avatar,
     Button,
@@ -8,32 +10,10 @@ import {
     MenuList,
     Typography,
 } from "@material-tailwind/react";
-import {
-    Cog6ToothIcon,
-    InboxArrowDownIcon,
-    LifebuoyIcon,
-    PowerIcon,
-    UserCircleIcon,
-} from "@heroicons/react/24/solid";
+import { PowerIcon } from "@heroicons/react/24/solid";
+import {useUserStore} from "../../stores/userStore.js";
 
-// profile menu component
 const profileMenuItems = [
-    {
-        label: "My Profile",
-        icon: UserCircleIcon,
-    },
-    {
-        label: "Edit Profile",
-        icon: Cog6ToothIcon,
-    },
-    {
-        label: "Inbox",
-        icon: InboxArrowDownIcon,
-    },
-    {
-        label: "Help",
-        icon: LifebuoyIcon,
-    },
     {
         label: "Sign Out",
         icon: PowerIcon,
@@ -42,8 +22,21 @@ const profileMenuItems = [
 
 export function AvatarWithUserDropdown() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const { logout} = useAuthStore();
+    const { userLogout} = useUserStore();
+    const navigate = useNavigate();
 
     const closeMenu = () => setIsMenuOpen(false);
+
+    const handleLogout = async () => {
+        try {
+            await userLogout();
+            logout();
+            navigate('/login');
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     return (
         <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -56,10 +49,10 @@ export function AvatarWithUserDropdown() {
                     <Avatar
                         variant="circular"
                         size="md"
-                        alt="tania andrew"
+                        alt="User Profile"
                         withBorder={true}
                         color="blue-gray"
-                        className=" p-0.5"
+                        className="p-0.5"
                         src="https://docs.material-tailwind.com/img/face-2.jpg"
                     />
                 </Button>
@@ -70,7 +63,7 @@ export function AvatarWithUserDropdown() {
                     return (
                         <MenuItem
                             key={label}
-                            onClick={closeMenu}
+                            onClick={isLastItem ? handleLogout : closeMenu}
                             className={`flex items-center gap-2 rounded ${
                                 isLastItem
                                     ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
