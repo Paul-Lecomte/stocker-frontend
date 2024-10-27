@@ -3,6 +3,7 @@ import { useUserStore } from '../../stores/userStore.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore.js';
 import { Input, Button, Typography } from "@material-tailwind/react";
+import logo from "../../assets/stocker_name.svg";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -34,9 +35,17 @@ const Login = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-                <Typography variant="h4" color="blue-gray" className="mb-6 text-center">
+        <div className="flex flex-col justify-center items-center min-h-screen" style={{background: "#101923"}}>
+            <div>
+                <img
+                    src={logo}
+                    alt="logo"
+                    className="w-50 pb-4"
+                />
+            </div>
+            <form onSubmit={handleSubmit} className="p-8 rounded-lg shadow-lg w-full max-w-sm"
+                  style={{background: "#212D3B", color: "#FFFFFF"}}>
+                <Typography variant="h4" className="mb-6 text-center">
                     Login
                 </Typography>
 
@@ -70,7 +79,7 @@ const Login = () => {
                     </Typography>
                 )}
 
-                <Button type="submit" color="blue" size="lg" fullWidth disabled={userLoading}>
+                <Button type="submit" style={{background: "#101923"}} size="lg" fullWidth disabled={userLoading}>
                     {userLoading ? "Loading..." : "Login"}
                 </Button>
             </form>
