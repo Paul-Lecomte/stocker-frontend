@@ -9,8 +9,8 @@ const Layout = () => {
         <div className="App">
             <Header />
             <Nav />
-            <div className="right-0 w-9/12 h-full fixed py-20 pl-4"
-            style={{background: "#101923"}}>
+            <div className="right-0 w-9/12 h-screen py-20 "
+            style={{background: "#101923", marginLeft: "25%"}}>
                 <Outlet />
             </div>
             <Footer />

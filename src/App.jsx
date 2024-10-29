@@ -9,7 +9,6 @@ import Movement from "./pages/movement/Movement.jsx";
 import Products from "./pages/products/Products.jsx";
 import Inventory from "./pages/inventory/Inventory.jsx";
 import Login from "./pages/login/Login.jsx";
-import Register from "./pages/Register/Register.jsx";
 
 
 function App() {
@@ -24,7 +23,6 @@ function App() {
               <Route path="movement" element={<Movement />} />
               <Route path="products" element={<Products />} />
               <Route path="inventory" element={<Inventory />} />
-              <Route path="register" element={<Register />} />
               <Route path="*" element={<ErrorPage />} />
           </Route>
       </Routes>

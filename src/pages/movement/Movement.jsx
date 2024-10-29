@@ -1,84 +1,98 @@
 import React, { useState } from 'react';
-import { Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input } from "@material-tailwind/react";
+import { Card, Typography, Checkbox } from "@material-tailwind/react";
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Movement = () => {
-    const [inventoryData, setInventoryData] = useState([
-        { id: 1, name: "Starlow", creation: "2024.03.24", nbr: 25, location: "aisle 2B" },
-        { id: 2, name: "Starlow", creation: "2024.03.24", nbr: 267, location: "aisle 2B" },
-        { id: 3, name: "Starlow", creation: "2024.03.24", nbr: 37, location: "aisle 2B" },
-        { id: 4, name: "Starlow", creation: "2024.03.24", nbr: 25, location: "aisle 2B" },
-    ]);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [editData, setEditData] = useState(null);
+    const productsData = [
+        { id: 1, name: "Product A", stockHistory: [150, 120, 90, 110, 100] },
+        { id: 2, name: "Product B", stockHistory: [100, 110, 115, 120, 95] },
+        { id: 3, name: "Product C", stockHistory: [200, 190, 180, 170, 160] },
+        // Add more products as needed
+    ];
 
-    const handleDelete = (id) => {
-        setInventoryData(inventoryData.filter((item) => item.id !== id));
+    const [selectedProducts, setSelectedProducts] = useState(productsData.map(product => product.id));
+
+    const handleToggleProduct = (id) => {
+        setSelectedProducts((prev) =>
+            prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+        );
     };
 
-    const handleEditClick = (item) => {
-        setEditData(item);
-        setIsDialogOpen(true);
-    };
+    const filteredProductsData = productsData.filter(product => selectedProducts.includes(product.id));
 
-    const handleEditChange = (e) => {
-        const { name, value } = e.target;
-        setEditData({ ...editData, [name]: value });
-    };
-
-    const handleSave = () => {
-        setInventoryData(inventoryData.map((item) => (item.id === editData.id ? editData : item)));
-        setIsDialogOpen(false);
+    const chartData = {
+        labels: ["2024-03-01", "2024-03-08", "2024-03-15", "2024-03-22", "2024-03-29"],
+        datasets: filteredProductsData.map((product, index) => ({
+            label: product.name,
+            data: product.stockHistory,
+            fill: false,
+            backgroundColor: `hsl(${index * 70}, 70%, 50%)`,
+            borderColor: `hsl(${index * 70}, 70%, 70%)`,
+        })),
     };
 
     return (
-        <Card className="p-6 bg-gray-800 text-white">
+        <Card className="rounded-none p-6 bg-gray-800 text-white">
             <Typography variant="h6" color="gray-300" className="mb-4">
-                Inventory
+                Full Inventory
             </Typography>
-            <table className="min-w-full text-left text-sm">
-                <thead>
-                <tr className="bg-gray-700">
-                    <th className="p-3">Name</th>
-                    <th className="p-3">Creation</th>
-                    <th className="p-3">Nbr</th>
-                    <th className="p-3">Location</th>
-                    <th className="p-3">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {inventoryData.map((item) => (
-                    <tr key={item.id} className={item.id % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
-                        <td className="p-3">{item.name}</td>
-                        <td className="p-3">{item.creation}</td>
-                        <td className="p-3">{item.nbr}</td>
-                        <td className="p-3">{item.location}</td>
-                        <td className="p-3 flex gap-2">
-                            <Button size="sm" color="blue" onClick={() => handleEditClick(item)}>
-                                Edit
-                            </Button>
-                            <Button size="sm" color="red" onClick={() => handleDelete(item.id)}>
-                                Delete
-                            </Button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
 
-            <Dialog open={isDialogOpen} handler={() => setIsDialogOpen(!isDialogOpen)}>
-                <DialogBody>
-                    <div className="flex flex-col gap-4">
-                        <Input label="Name" name="name" value={editData?.name || ''} onChange={handleEditChange} />
-                        <Input label="Creation" name="creation" value={editData?.creation || ''} onChange={handleEditChange} />
-                        <Input label="Nbr" name="nbr" type="number" value={editData?.nbr || ''} onChange={handleEditChange} />
-                        <Input label="Location" name="location" value={editData?.location || ''} onChange={handleEditChange} />
-                    </div>
-                </DialogBody>
-                <DialogFooter>
-                    <Button color="blue" onClick={handleSave}>Save</Button>
-                    <Button color="gray" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                </DialogFooter>
-            </Dialog>
+            {/* Product Selection */}
+            <div className="flex flex-col mb-4">
+                <Typography variant="small" color="gray-300">
+                    Select products to display on the graph:
+                </Typography>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                    {productsData.map(product => (
+                        <label key={product.id} className="flex items-center space-x-2">
+                            <Checkbox
+                                checked={selectedProducts.includes(product.id)}
+                                onChange={() => handleToggleProduct(product.id)}
+                                color="blue"
+                            />
+                            <span>{product.name}</span>
+                        </label>
+                    ))}
+                </div>
+            </div>
+
+            {/* Inventory Table */}
+            <div className="mb-6">
+                <Typography variant="h6" className="mb-2">
+                    Inventory Table
+                </Typography>
+                <table className="min-w-full text-left text-sm">
+                    <thead>
+                    <tr className="bg-gray-700">
+                        <th className="p-3">Name</th>
+                        <th className="p-3">Stock History</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {productsData.map((product) => (
+                        <tr key={product.id} className={product.id % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
+                            <td className="p-3">{product.name}</td>
+                            <td className="p-3">{product.stockHistory.join(', ')}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Stock History Graph */}
+            <Typography variant="h6" className="mb-4">
+                Stock Level Over Time
+            </Typography>
+            <Line data={chartData} options={{
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: "Stock Levels of Selected Products" },
+                },
+            }} />
         </Card>
     );
 };
