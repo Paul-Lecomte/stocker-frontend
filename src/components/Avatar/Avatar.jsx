@@ -32,7 +32,7 @@ export function AvatarWithUserDropdown() {
         try {
             await userLogout();
             logout();
-            navigate('/login');
+            navigate('login');
         } catch (err) {
             console.log(err);
         }

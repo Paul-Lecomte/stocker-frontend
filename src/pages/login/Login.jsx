@@ -8,16 +8,18 @@ import logo from "../../assets/stocker_name.svg";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const { user, error, userLoading, login, success } = useUserStore();
     const { setCredentials, userInfo } = useAuthStore();
+
     const navigate = useNavigate();
 
     useEffect(() => {
         if (success) {
-            setCredentials({ user });
+            setCredentials({user});
             navigate('/');
         }
-    }, [navigate, success, setCredentials, user]);
+    }, [navigate, success, user]);
 
     useEffect(() => {
         if (userInfo) {

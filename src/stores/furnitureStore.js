@@ -23,29 +23,12 @@ export const useFurnitureStore = create((set) => ({
 
     fetchDashboardData: async () => {
         set({ furnitureLoading: true, error: null });
-        const token = localStorage.getItem('userInfo');
 
         try {
-            const productCountResponse = await axios.get('http://localhost:3000/api/furniture/count', {
-                headers: {
-                    Authorization: `Bearer ${token}` // Set the token in the headers
-                }
-            });
-            const movementCountResponse = await axios.get('http://localhost:3000/api/furniture/today-movements', {
-                headers: {
-                    Authorization: `Bearer ${token}` // Set the token in the headers
-                }
-            });
-            const mostSoldResponse = await axios.get('http://localhost:3000/api/furniture/most-sold', {
-                headers: {
-                    Authorization: `Bearer ${token}` // Set the token in the headers
-                }
-            });
-            const highestPriceResponse = await axios.get('http://localhost:3000/api/furniture/highest-price', {
-                headers: {
-                    Authorization: `Bearer ${token}` // Set the token in the headers
-                }
-            });
+            const productCountResponse = await axios.get('http://localhost:3000/api/furniture/count');
+            const movementCountResponse = await axios.get('http://localhost:3000/api/furniture/today-movements');
+            const mostSoldResponse = await axios.get('http://localhost:3000/api/furniture/most-sold');
+            const highestPriceResponse = await axios.get('http://localhost:3000/api/furniture/highest-price');
 
             set({
                 productCount: productCountResponse.data.count,

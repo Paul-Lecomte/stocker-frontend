@@ -24,7 +24,7 @@ export const useUserStore = create((set) => ({
     login: async (data) => {
         set({ userLoading: true, error: null });
         try {
-            const response = await axios.post('http://localhost:3000/api/user/auth', data);
+            const response = await axios.post('http://localhost:3000/api/user/login', data);
             set(() => ({ user: response.data, userLoading: false, success: true }));
         } catch (error) {
             set({ error: error.message, userLoading: false });

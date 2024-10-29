@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Card, Typography } from "@material-tailwind/react";
 import { useFurnitureStore } from '../../stores/furnitureStore.js';
+import axios from "axios";
 
 const Dashboard = () => {
     const {
@@ -23,7 +24,7 @@ const Dashboard = () => {
 
             <div className="flex space-x-6">
                 <Card className="text-center p-6 w-40" style={{ background: "#212D3B", color: "#FFFFFF" }}>
-                    <Typography variant="h3" style={{ color: "#54A1DB" }}>{productCount}</Typography> {/* Use productCount here */}
+                    <Typography variant="h3" style={{ color: "#54A1DB" }}>{productCount}</Typography>
                     <Typography>Products</Typography>
                 </Card>
                 <Card className="text-center p-6 w-40" style={{ background: "#212D3B", color: "#FFFFFF" }}>
@@ -32,11 +33,11 @@ const Dashboard = () => {
                 </Card>
             </div>
 
-            <Card className="w-full max-w-3xl p-4 bg-gray-800">
+            <Card className="w-full max-w-52 p-4 bg-gray-800">
                 <Typography variant="h5" className="mb-4 text-center">Most Sold Products</Typography>
             </Card>
 
-            <Card className="w-full max-w-3xl p-4 bg-gray-800">
+            <Card className="w-full max-w-52 p-4 bg-gray-800">
                 <Typography variant="h5" className="mb-4 text-center">Highest Price Products</Typography>
             </Card>
         </div>

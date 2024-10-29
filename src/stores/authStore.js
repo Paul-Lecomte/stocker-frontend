@@ -12,5 +12,4 @@ export const useAuthStore = create((set) => ({
         set(() => ({userInfo: null}))
         localStorage.removeItem('userInfo')
     }
-
 }))
