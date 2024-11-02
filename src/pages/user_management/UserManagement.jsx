@@ -131,6 +131,7 @@ const UserManagement = () => {
                         </div>
                         <Select label="Role" name="role" value={editData.role} onChange={(e) => setEditData({ ...editData, role: e })}>
                             <Option value="admin">Admin</Option>
+                            <Option value="superadmin">Super admin</Option>
                             <Option value="user">User</Option>
                         </Select>
                     </div>

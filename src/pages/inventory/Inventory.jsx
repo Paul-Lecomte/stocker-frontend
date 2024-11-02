@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input } from "@material-tailwind/react";
+import { useNavigate } from 'react-router-dom';
 
 const Inventory = () => {
     const [inventoryData, setInventoryData] = useState([
@@ -11,6 +12,7 @@ const Inventory = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [editData, setEditData] = useState({ name: '', creation: '', nbr: '', location: '' });
+    const navigate = useNavigate();
 
     const handleDelete = (id) => {
         setInventoryData(inventoryData.filter((item) => item.id !== id));
@@ -40,6 +42,10 @@ const Inventory = () => {
             setInventoryData(inventoryData.map((item) => (item.id === editData.id ? editData : item)));
         }
         setIsDialogOpen(false);
+    };
+
+    const handleDetailsClick = (id) => {
+        navigate(`/products/${id}`);
     };
 
     return (
@@ -75,6 +81,9 @@ const Inventory = () => {
                             </Button>
                             <Button size="sm" color="red" onClick={() => handleDelete(item.id)}>
                                 Delete
+                            </Button>
+                            <Button size="sm" color="purple" onClick={() => handleDetailsClick(item.id)}>
+                                Details
                             </Button>
                         </td>
                     </tr>
