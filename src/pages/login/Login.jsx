@@ -60,6 +60,7 @@ const Login = () => {
                         required
                         color="blue"
                         size="lg"
+                        autoComplete="email"
                     />
                 </div>
 
@@ -72,6 +73,7 @@ const Login = () => {
                         required
                         color="blue"
                         size="lg"
+                        autoComplete="current-password"
                     />
                 </div>
 

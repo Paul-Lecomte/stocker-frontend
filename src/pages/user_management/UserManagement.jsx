@@ -57,7 +57,7 @@ const UserManagement = () => {
     return (
         <Card className="p-6 bg-gray-800 text-white">
             <div className="flex justify-between items-center mb-4">
-                <Typography variant="h6" color="gray-300">
+                <Typography variant="h6">
                     User Management
                 </Typography>
                 <Button size="sm" color="green" onClick={handleAddClick}>
@@ -66,7 +66,7 @@ const UserManagement = () => {
             </div>
             <table className="min-w-full text-left text-sm">
                 <thead>
-                <tr className="bg-gray-700">
+                <tr className="bg-gray-600">
                     <th className="p-3">Name</th>
                     <th className="p-3">Date</th>
                     <th className="p-3">Email</th>
@@ -85,7 +85,6 @@ const UserManagement = () => {
                             {showPassword[user.id] ? user.password : "••••••••"}
                             <IconButton
                                 variant="text"
-                                color="gray-300"
                                 onClick={() => toggleShowPassword(user.id)}
                                 className="ml-2"
                             >
@@ -122,7 +121,6 @@ const UserManagement = () => {
                             />
                             <IconButton
                                 variant="text"
-                                color="gray-300"
                                 onClick={toggleShowEditPassword}
                                 className="ml-2"
                             >

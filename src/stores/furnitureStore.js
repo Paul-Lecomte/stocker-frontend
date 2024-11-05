@@ -14,7 +14,10 @@ export const useFurnitureStore = create((set) => ({
     fetchFurniture: async () => {
         set({ furnitureLoading: true, error: null });
         try {
-            const response = await axios.get('http://localhost:3000/api/furniture');
+            const response = await axios.get('http://localhost:3000/api/furniture', {
+                method : 'get',
+                withCredentials : true
+            });
             set(() => ({ furnitureList: response.data, furnitureLoading: false, success: true }));
         } catch (error) {
             set({ error: error.message, furnitureLoading: false });
@@ -25,10 +28,22 @@ export const useFurnitureStore = create((set) => ({
         set({ furnitureLoading: true, error: null });
 
         try {
-            const productCountResponse = await axios.get('http://localhost:3000/api/furniture/count');
-            const movementCountResponse = await axios.get('http://localhost:3000/api/furniture/today-movements');
-            const mostSoldResponse = await axios.get('http://localhost:3000/api/furniture/most-sold');
-            const highestPriceResponse = await axios.get('http://localhost:3000/api/furniture/highest-price');
+            const productCountResponse = await axios.get('http://localhost:3000/api/furniture/count', {
+                method : 'get',
+                withCredentials : true
+            });
+            const movementCountResponse = await axios.get('http://localhost:3000/api/furniture/today-movements', {
+                method : 'get',
+                withCredentials : true
+            });
+            const mostSoldResponse = await axios.get('http://localhost:3000/api/furniture/most-sold', {
+                method : 'get',
+                withCredentials : true
+            });
+            const highestPriceResponse = await axios.get('http://localhost:3000/api/furniture/highest-price', {
+                method : 'get',
+                withCredentials : true
+            });
 
             set({
                 productCount: productCountResponse.data.count,
@@ -47,7 +62,10 @@ export const useFurnitureStore = create((set) => ({
     addFurniture: async (data) => {
         set({ furnitureLoading: true, error: null });
         try {
-            const response = await axios.post('http://localhost:3000/api/furniture', data);
+            const response = await axios.post('http://localhost:3000/api/furniture', data, {
+                method : 'get',
+                withCredentials : true
+            });
             set((state) => ({
                 furnitureList: [...state.furnitureList, response.data],
                 furnitureLoading: false,
@@ -61,7 +79,10 @@ export const useFurnitureStore = create((set) => ({
     updateFurniture: async (id, data) => {
         set({ furnitureLoading: true, error: null });
         try {
-            const response = await axios.put(`http://localhost:3000/api/furniture/${id}`, data);
+            const response = await axios.put(`http://localhost:3000/api/furniture/${id}`, data, {
+                method : 'get',
+                withCredentials : true
+            });
             set((state) => ({
                 furnitureList: state.furnitureList.map((furniture) =>
                     furniture._id === id ? response.data : furniture
@@ -77,7 +98,10 @@ export const useFurnitureStore = create((set) => ({
     deleteFurniture: async (id) => {
         set({ furnitureLoading: true, error: null });
         try {
-            await axios.delete(`http://localhost:3000/api/furniture/${id}`);
+            await axios.delete(`http://localhost:3000/api/furniture/${id}`, {
+                method : 'get',
+                withCredentials : true
+            });
             set((state) => ({
                 furnitureList: state.furnitureList.filter((furniture) => furniture._id !== id),
                 furnitureLoading: false,

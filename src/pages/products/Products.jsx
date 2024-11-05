@@ -1,40 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Typography, Select, Option, Input } from "@material-tailwind/react";
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import axios from 'axios';
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import { Line } from "react-chartjs-2";
+import { useEffect, useState } from "react";
+import { getStockMovements } from '../../stores/stockMovementStore.js'; // Adjust this import path
+import { Card, Input, Select, Typography } from "@material-tailwind/react";
+import axios from "axios";
 
 const Products = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [timePeriod, setTimePeriod] = useState("Last 30 days");
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    const [stockMovements, setStockMovements] = useState([]);
 
     useEffect(() => {
-        // Fetch a default product or specific ID on load
-        fetchProductById(1); // Replace with actual initial ID if needed
+        fetchProductById('671df552156af3900aca449a'); // Default ID
     }, []);
 
-    const fetchProductById = (id) => {
-        axios.get(`/api/furniture/${id}`)
-            .then((response) => setSelectedProduct(response.data))
-            .catch((error) => console.error("Error fetching furniture details:", error));
+    const fetchProductById = async (id) => {
+        try {
+            const response = await axios.get(`/api/furniture/${id}`, {
+                method : 'get',
+                withCredentials : true
+            });
+            setSelectedProduct(response.data);
+            const movements = await getStockMovements(id);
+            console.log("Fetched stock movements:", movements); // Log the fetched movements
+            setStockMovements(movements);
+        } catch (error) {
+            console.error("Error fetching product details or stock movements:", error);
+        }
     };
 
-    const handleSearch = () => {
-        axios.get(`/api/furniture/search?name=${searchTerm}`)
-            .then((response) => setSearchResults(response.data))
-            .catch((error) => console.error("Error fetching search results:", error));
-    };
-
+    // Prepare data for the chart
     const stockData = {
-        labels: ["2024-03-01", "2024-03-08", "2024-03-15", "2024-03-22", "2024-03-29"],
+        labels: Array.isArray(stockMovements) ?
+            stockMovements.map(movement => new Date(movement.date).toLocaleDateString()) : [],
         datasets: [
             {
                 label: "Stock Level",
-                data: [150, 120, 90, 110, 100],
+                data: Array.isArray(stockMovements) ?
+                    stockMovements.map(movement => movement.quantity) : [],
                 fill: false,
                 backgroundColor: "rgb(75, 192, 192)",
                 borderColor: "rgba(75, 192, 192, 0.2)",
@@ -47,7 +51,7 @@ const Products = () => {
     return (
         <Card className="p-6 bg-gray-800 text-white rounded-none">
             <div className="flex flex-col mb-4">
-                <Typography variant="h6" color="gray-300">
+                <Typography variant="h6">
                     {selectedProduct.name} Details
                 </Typography>
                 <Input
@@ -68,17 +72,18 @@ const Products = () => {
                     value={timePeriod}
                     onChange={(value) => setTimePeriod(value)}
                 >
-                    <Option value="Last 30 days">Last 30 days</Option>
-                    <Option value="Last 3 months">Last 3 months</Option>
-                    <Option value="Last year">Last year</Option>
+                    <Select.Option value="Last 30 days">Last 30 days</Select.Option>
+                    <Select.Option value="Last 3 months">Last 3 months</Select.Option>
+                    <Select.Option value="Last year">Last year</Select.Option>
                 </Select>
             </div>
 
+
             <div className="mb-6">
-                <Typography variant="subtitle1">Creation Date: {selectedProduct.creationDate}</Typography>
-                <Typography variant="subtitle1">Location: {selectedProduct.location}</Typography>
-                <Typography variant="subtitle1">Stock: {selectedProduct.stock}</Typography>
-                <Typography variant="subtitle1">Description: {selectedProduct.description}</Typography>
+                <Typography>Creation Date: {selectedProduct.creationDate}</Typography>
+                <Typography>Location: {selectedProduct.location}</Typography>
+                <Typography>Stock: {selectedProduct.stock}</Typography>
+                <Typography>Description: {selectedProduct.description}</Typography>
             </div>
 
             <div>

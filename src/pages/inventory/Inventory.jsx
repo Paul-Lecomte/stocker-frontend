@@ -51,7 +51,7 @@ const Inventory = () => {
     return (
         <Card className="p-6 bg-gray-800 text-white">
             <div className="flex justify-between items-center mb-4">
-                <Typography variant="h6" color="gray-300">
+                <Typography variant="h6" color="gray">
                     Inventory
                 </Typography>
                 <Button size="sm" color="green" onClick={handleAddClick}>

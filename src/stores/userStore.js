@@ -13,7 +13,10 @@ export const useUserStore = create((set) => ({
     register: async (data) => {
         set({ userLoading: true, error: null });
         try {
-            const response = await axios.post('http://localhost:3000/api/user/register', data);
+            const response = await axios.post('http://localhost:3000/api/user/register', data, {
+                method : 'post',
+                withCredentials : true
+            });
             set(() => ({ user: response.data, userLoading: false, success: true }));
         } catch (error) {
             set({ error: error.message, userLoading: false });
@@ -24,7 +27,10 @@ export const useUserStore = create((set) => ({
     login: async (data) => {
         set({ userLoading: true, error: null });
         try {
-            const response = await axios.post('http://localhost:3000/api/user/login', data);
+            const response = await axios.post('http://localhost:3000/api/user/login', data, {
+                method : 'post',
+                withCredentials: true
+            });
             set(() => ({ user: response.data, userLoading: false, success: true }));
         } catch (error) {
             set({ error: error.message, userLoading: false });
@@ -46,7 +52,10 @@ export const useUserStore = create((set) => ({
     fetchUsers: async () => {
         set({ userLoading: true, error: null });
         try {
-            const response = await axios.get('http://localhost:3000/api/user');
+            const response = await axios.get('http://localhost:3000/api/user', {
+                method : 'get',
+                withCredentials : true
+            });
             set(() => ({ users: response.data, userLoading: false, success: true }));
         } catch (error) {
             set({ error: error.message, userLoading: false });
@@ -57,7 +66,10 @@ export const useUserStore = create((set) => ({
     updateUser: async (id, data) => {
         set({ userLoading: true, error: null });
         try {
-            const response = await axios.put(`http://localhost:3000/api/user/${id}`, data);
+            const response = await axios.put(`http://localhost:3000/api/user/${id}`, data, {
+                method : 'put',
+                withCredentials : true
+            });
             set((state) => ({
                 users: state.users.map((user) => (user._id === id ? response.data : user)),
                 userLoading: false,
@@ -72,7 +84,10 @@ export const useUserStore = create((set) => ({
     deleteUser: async (id) => {
         set({ userLoading: true, error: null });
         try {
-            await axios.delete(`http://localhost:3000/api/user/${id}`);
+            await axios.delete(`http://localhost:3000/api/user/${id}`, {
+                method : 'delete',
+                withCredentials : true
+            });
             set((state) => ({
                 users: state.users.filter((user) => user._id !== id),
                 userLoading: false,

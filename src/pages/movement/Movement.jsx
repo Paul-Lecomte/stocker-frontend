@@ -36,13 +36,13 @@ const Movement = () => {
 
     return (
         <Card className="rounded-none p-6 bg-gray-800 text-white">
-            <Typography variant="h6" color="gray-300" className="mb-4">
+            <Typography variant="h6" className="mb-4">
                 Full Inventory
             </Typography>
 
             {/* Product Selection */}
             <div className="flex flex-col mb-4">
-                <Typography variant="small" color="gray-300">
+                <Typography variant="small">
                     Select products to display on the graph:
                 </Typography>
                 <div className="grid grid-cols-3 gap-2 mt-2">
