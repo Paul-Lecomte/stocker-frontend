@@ -1,34 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input, Select, Option, IconButton } from "@material-tailwind/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import axios from 'axios';
 
 const UserManagement = () => {
-    const [userData, setUserData] = useState([
-        { id: 1, name: "Starlow", date: "2024.03.24", email: "starlow@example.com", password: "secret123", role: "admin" },
-        { id: 2, name: "Starlow", date: "2024.03.24", email: "starlow@example.com", password: "hidden456", role: "user" },
-        // Add more entries as needed
-    ]);
+    const [userData, setUserData] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
-    const [editData, setEditData] = useState({ name: '', date: '', email: '', password: '', role: '' });
+    const [editData, setEditData] = useState({ first_name: '', last_name: '', createdAt: '', email: '', password: '', role: '' });
     const [showPassword, setShowPassword] = useState({});
     const [showEditPassword, setShowEditPassword] = useState(false);
 
-    const handleDelete = (id) => {
-        setUserData(userData.filter((user) => user.id !== id));
+    // For delete confirmation dialog
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [deleteUserId, setDeleteUserId] = useState(null);
+
+    // Fetch users from the backend
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/user/', {
+                    method: 'get',
+                    withCredentials: true
+                });
+                setUserData(response.data);  // Update state with fetched user data
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+        fetchUsers();
+    }, []);  // Empty dependency array ensures it runs only once on component mount
+
+    const handleDeleteClick = (id) => {
+        setDeleteUserId(id);  // Set the ID of the user to be deleted
+        setIsDeleteDialogOpen(true);  // Open the confirmation dialog
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            const response = await axios.delete(`http://localhost:3000/api/user/delete/${deleteUserId}`, {
+                method: 'delete',
+                withCredentials: true
+            });
+
+            // Update local state to remove the deleted user
+            setUserData(userData.filter(user => user._id !== deleteUserId));
+
+            // Close the delete confirmation dialog
+            setIsDeleteDialogOpen(false);
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setIsDeleteDialogOpen(false);  // Close the confirmation dialog without deleting
     };
 
     const handleEditClick = (user) => {
         setEditData(user);
         setIsAddMode(false);
-        setShowEditPassword(false); // Reset visibility when opening the dialog
+        setShowEditPassword(false);
         setIsDialogOpen(true);
     };
 
     const handleAddClick = () => {
-        setEditData({ id: Date.now(), name: '', date: '', email: '', password: '', role: '' });
+        setEditData({ id: Date.now(), first_name: '', last_name: '', createdAt: '', email: '', password: '', role: '' });
         setIsAddMode(true);
-        setShowEditPassword(false); // Reset visibility when opening the dialog
+        setShowEditPassword(false);
         setIsDialogOpen(true);
     };
 
@@ -37,14 +76,57 @@ const UserManagement = () => {
         setEditData({ ...editData, [name]: value });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (isAddMode) {
-            setUserData([...userData, editData]);
+            try {
+                // Make the API call to add the user
+                const response = await axios.post('http://localhost:3000/api/user/register', {
+                    first_name: editData.first_name,
+                    last_name: editData.last_name,
+                    email: editData.email,
+                    password: editData.password,
+                    role: editData.role,
+                }, {
+                    method: 'post',
+                    withCredentials: true,
+                });
+
+                // Update local state to add the new user
+                setUserData([...userData, response.data]);
+
+                // Close the dialog
+                setIsDialogOpen(false);
+            } catch (error) {
+                console.error('Error adding user:', error);
+            }
         } else {
-            setUserData(userData.map((user) => (user.id === editData.id ? editData : user)));
+            try {
+                // Update the user in the backend
+                const response = await axios.put(
+                    'http://localhost:3000/api/user/update',
+                    {
+                        first_name: editData.first_name,
+                        last_name: editData.last_name,
+                        email: editData.email,
+                        role: editData.role,
+                        password: editData.password, // Only send password if it's updated
+                    },
+                    { withCredentials: true }
+                );
+
+                // Update the local state after successful update
+                setUserData(userData.map((user) =>
+                    user._id === response.data._id ? response.data : user
+                ));
+
+                // Close the dialog
+                setIsDialogOpen(false);
+            } catch (error) {
+                console.error('Error updating user:', error);
+            }
         }
-        setIsDialogOpen(false);
     };
+
 
     const toggleShowPassword = (id) => {
         setShowPassword((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -77,18 +159,19 @@ const UserManagement = () => {
                 </thead>
                 <tbody>
                 {userData.map((user) => (
-                    <tr key={user.id} className={user.id % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
-                        <td className="p-3">{user.name}</td>
-                        <td className="p-3">{user.date}</td>
+                    <tr key={user._id} className={user._id % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
+                        <td className="p-3">{user.first_name} {user.last_name}</td>
+                        <td className="p-3">{user.createdAt}</td>
                         <td className="p-3">{user.email}</td>
                         <td className="p-3 flex items-center">
-                            {showPassword[user.id] ? user.password : "••••••••"}
+                            {showPassword[user._id] ? user.password : "••••••••"}
                             <IconButton
                                 variant="text"
-                                onClick={() => toggleShowPassword(user.id)}
+                                onClick={() => toggleShowPassword(user._id)}
                                 className="ml-2"
                             >
-                                {showPassword[user.id] ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                                {showPassword[user._id] ? <EyeSlashIcon className="w-5 h-5"/> :
+                                    <EyeIcon className="w-5 h-5"/>}
                             </IconButton>
                         </td>
                         <td className="p-3">{user.role}</td>
@@ -96,7 +179,7 @@ const UserManagement = () => {
                             <Button size="sm" color="blue" onClick={() => handleEditClick(user)}>
                                 Edit
                             </Button>
-                            <Button size="sm" color="red" onClick={() => handleDelete(user.id)}>
+                            <Button size="sm" color="red" onClick={() => handleDeleteClick(user._id)}>
                                 Delete
                             </Button>
                         </td>
@@ -105,12 +188,28 @@ const UserManagement = () => {
                 </tbody>
             </table>
 
+            {/* Edit/Add User Dialog */}
             <Dialog open={isDialogOpen} handler={() => setIsDialogOpen(!isDialogOpen)}>
                 <DialogBody>
                     <div className="flex flex-col gap-4">
-                        <Input label="Name" name="name" value={editData.name} onChange={handleEditChange} />
-                        <Input label="Date" name="date" value={editData.date} onChange={handleEditChange} />
-                        <Input label="Email" name="email" value={editData.email} onChange={handleEditChange} />
+                        <Input
+                            label="Last Name"
+                            name="last_name"
+                            value={editData.last_name}
+                            onChange={handleEditChange}
+                        />
+                        <Input
+                            label="First Name"
+                            name="first_name"
+                            value={editData.first_name}
+                            onChange={handleEditChange}
+                        />
+                        <Input
+                            label="Email"
+                            name="email"
+                            value={editData.email}
+                            onChange={handleEditChange}
+                        />
                         <div className="flex items-center">
                             <Input
                                 label="Password"
@@ -141,6 +240,17 @@ const UserManagement = () => {
                     <Button color="gray" onClick={() => setIsDialogOpen(false)}>
                         Cancel
                     </Button>
+                </DialogFooter>
+            </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={isDeleteDialogOpen} handler={() => setIsDeleteDialogOpen(!isDeleteDialogOpen)}>
+                <DialogBody>
+                    <Typography variant="h6">Are you sure you want to delete this user?</Typography>
+                </DialogBody>
+                <DialogFooter>
+                    <Button color="red" onClick={handleDeleteConfirm}>Delete</Button>
+                    <Button color="gray" onClick={handleDeleteCancel}>Cancel</Button>
                 </DialogFooter>
             </Dialog>
         </Card>

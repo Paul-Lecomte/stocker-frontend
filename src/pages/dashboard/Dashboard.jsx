@@ -5,7 +5,8 @@ import axios from "axios";
 
 const Dashboard = () => {
     const {
-        productCount = 0, // Ensure a default value of 0
+        furnitureCount = 0,
+        userCount = 0,
         fetchDashboardData,
         furnitureLoading,
         error
@@ -24,11 +25,11 @@ const Dashboard = () => {
 
             <div className="flex space-x-6">
                 <Card className="text-center p-6 w-40" style={{ background: "#212D3B", color: "#FFFFFF" }}>
-                    <Typography variant="h3" style={{ color: "#54A1DB" }}>{productCount}</Typography>
-                    <Typography>Products</Typography>
+                    <Typography variant="h3" style={{ color: "#54A1DB" }}>{furnitureCount}</Typography>
+                    <Typography>Furniture Count</Typography>
                 </Card>
                 <Card className="text-center p-6 w-40" style={{ background: "#212D3B", color: "#FFFFFF" }}>
-                    <Typography variant="h3" style={{ color: "#54A1DB" }}>test</Typography>
+                    <Typography variant="h3" style={{ color: "#54A1DB" }}>{userCount}</Typography>
                     <Typography>Users</Typography>
                 </Card>
             </div>
