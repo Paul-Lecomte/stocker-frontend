@@ -30,35 +30,40 @@ export const useFurnitureStore = create((set) => ({
         set({ furnitureLoading: true, error: null });
 
         try {
+            // Fetch furniture count
             const productCountResponse = await axios.get('http://localhost:3000/api/furniture/count', {
                 method: 'get',
                 withCredentials: true
             });
+
+            // Fetch other data
             const movementCountResponse = await axios.get('http://localhost:3000/api/furniture/today-movements', {
                 method: 'get',
                 withCredentials: true
             });
+
             const mostSoldResponse = await axios.get('http://localhost:3000/api/furniture/most-sold', {
                 method: 'get',
                 withCredentials: true
             });
+
             const highestPriceResponse = await axios.get('http://localhost:3000/api/furniture/highest-price', {
                 method: 'get',
                 withCredentials: true
             });
-            const userCountResponse = await axios.get('http://localhost:3000/api/user/count', { // Fetch user count
+
+            const userCountResponse = await axios.get('http://localhost:3000/api/user/count', {
                 method: 'get',
                 withCredentials: true
             });
 
             // Set data into the store
             set({
-                productCount: productCountResponse.data.count,
+                furnitureCount: productCountResponse.data.furnitureCount, // Corrected this line
                 movementCount: movementCountResponse.data.count,
                 mostSoldProducts: mostSoldResponse.data,
                 highestPriceProducts: highestPriceResponse.data,
-                userCount: userCountResponse.data.count, // Set user count
-                furnitureCount: productCountResponse.data.count, // Set furniture count
+                userCount: userCountResponse.data.count,
                 furnitureLoading: false,
                 success: true,
             });
@@ -66,6 +71,7 @@ export const useFurnitureStore = create((set) => ({
             set({ error: error.message, furnitureLoading: false });
         }
     },
+
 
     addFurniture: async (data) => {
         set({ furnitureLoading: true, error: null });
