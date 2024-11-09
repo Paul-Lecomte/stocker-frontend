@@ -1,86 +1,58 @@
 
 # Stocker Frontend
 
-Stocker Frontend is the web-based client for managing stock, inventory, and orders in the Stocker application. This project is built with React.js and communicates with the Stocker Backend API to provide a seamless and efficient user interface for inventory management.
+The frontend of the Stocker project is a web application built using React.js, styled with Tailwind CSS and Material Tailwind. It allows users to interact with the furniture inventory, view stock movements, and visualize stock data on graphs.
 
 ## Table of Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the App](#running-the-app)
 - [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Setup and Installation](#setup-and-installation)
-- [Environment Variables](#environment-variables)
-- [Available Scripts](#available-scripts)
 - [Contributing](#contributing)
-- [License](#license)
+
+## Installation
+
+1. Clone this repository to your local machine:
+   ```bash
+   git clone https://github.com/Paul-Lecomte/stocker-frontend.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd stocker-frontend
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Create a `.env` file in the root directory and configure the following variables:
+   - `REACT_APP_API_URL`: The URL of the backend server
+
+## Configuration
+
+To run the frontend app locally:
+
+```bash
+npm start
+```
+
+This will start the frontend in development mode on [http://localhost:3000](http://localhost:3000).
+
+## Running the App
+
+1. The app displays a dashboard showing user and furniture information.
+2. Users can view and update furniture details, track stock movements, and see charts displaying stock levels over time.
+3. The app interacts with the backend APIs to fetch and send data about furniture, stock movements, and user authentication.
 
 ## Features
 
-- **User Authentication**: Log in and register securely with JWT.
-- **Role-Based Dashboard**: Custom views and actions for different user roles (admin, manager, staff).
-- **Real-Time Stock Updates**: Display up-to-date stock levels and order statuses.
-- **Responsive Design**: Optimized for both desktop and mobile devices.
-- **Order Management**: Easily manage and track orders.
-- **Modern UI**: Clean, intuitive interface built with React and Material-UI.
-
-## Tech Stack
-
-- **React.js**: Frontend framework for building user interfaces.
-- **Material-UI**: UI component library for React.
-- **Axios**: For making HTTP requests to the backend API.
-- **React Router**: Routing library for navigation between different views.
-
-## Setup and Installation
-
-1. Clone the repository:
-
-   \`\`\`bash
-   git clone https://github.com/Paul-Lecomte/stocker-frontend.git
-   cd stocker-frontend
-   \`\`\`
-
-2. Install dependencies:
-
-   \`\`\`bash
-   npm install
-   \`\`\`
-
-3. Set up environment variables. Create a `.env` file in the root directory with the following:
-
-   \`\`\`bash
-   REACT_APP_API_URL=<Your Backend API URL>
-   \`\`\`
-
-4. Start the development server:
-
-   \`\`\`bash
-   npm start
-   \`\`\`
-
-   The app will be available at `http://localhost:3000`.
-
-## Environment Variables
-
-- **REACT_APP_API_URL**: The URL of the Stocker Backend API.
-
-## Available Scripts
-
-In the project directory, you can run the following scripts:
-
-- `npm start`: Runs the app in the development mode.
-- `npm run build`: Builds the app for production.
-- `npm test`: Launches the test runner.
-- `npm run eject`: Ejects the project from Create React App configuration (use with caution).
+- **Furniture Overview**: View all furniture items, including name, quantity, price, and movement history.
+- **Stock Movement Graph**: Visualize stock movements using Chart.js for better analysis.
+- **Authentication**: Users can register, log in, and access the dashboard with role-based access control.
 
 ## Contributing
 
-We welcome contributions to enhance Stocker Frontend! If you'd like to contribute:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Commit your changes.
-4. Submit a pull request.
-
-Please ensure your code follows the existing style and is well tested.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+Contributions are welcome! To contribute, please fork this repository, create a new branch, and submit a pull request with your changes.
