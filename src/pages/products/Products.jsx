@@ -1,7 +1,7 @@
 import { Line } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Input, Select, Typography } from "@material-tailwind/react";
+import { Card, Input, Select, Typography, Button } from "@material-tailwind/react";
 import axios from "axios";
 import debounce from 'lodash/debounce';  // Import debounce from lodash
 
@@ -11,11 +11,13 @@ const Products = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [timePeriod, setTimePeriod] = useState("Last 30 days");
     const [stockMovements, setStockMovements] = useState([]);
+    const [filteredMovements, setFilteredMovements] = useState([]);
     const [customStartDate, setCustomStartDate] = useState(""); // Track custom start date
     const [customEndDate, setCustomEndDate] = useState(""); // Track custom end date
     const [searchQuery, setSearchQuery] = useState(""); // Track the search query
     const [searchResults, setSearchResults] = useState([]); // Track the search results
     const [noDataFound, setNoDataFound] = useState(false); // Track if no data is found
+    const [isLoading, setIsLoading] = useState(false); // Track loading state for search
 
     // Fetch product details and stock movements when furnitureId or other dependencies change
     useEffect(() => {
@@ -26,17 +28,22 @@ const Products = () => {
 
     // Debounced search
     const fetchSearchResults = debounce(async (query) => {
+        if (!query.trim()) {
+            setSearchResults([]); // Clear search results if query is empty
+            return;
+        }
+
         try {
-            console.log("Searching for:", query);  // Log search query
+            setIsLoading(true); // Start loading
             const response = await axios.get(`http://localhost:3000/api/furniture/search`, {
                 params: { name: query },  // Send 'name' as the query parameter
                 method: 'get',
                 withCredentials: true
             });
-            console.log("Search results:", response.data);  // Log the response data
             setSearchResults(response.data);
+            setIsLoading(false); // End loading
         } catch (error) {
-            console.error("Error fetching search results:", error);  // Log any errors
+            setIsLoading(false); // End loading even if there's an error
         }
     }, 500);  // 500ms debounce delay
 
@@ -59,65 +66,82 @@ const Products = () => {
             });
             setSelectedProduct(productResponse.data);
 
-            // Calculate date range based on selected time period or custom dates
-            let startDate, endDate;
-            const currentDate = new Date();
-
-            if (customStartDate && customEndDate) {
-                startDate = new Date(customStartDate);
-                endDate = new Date(customEndDate);
-            } else {
-                switch (timePeriod) {
-                    case "Last 30 days":
-                        startDate = new Date(currentDate.setDate(currentDate.getDate() - 30));
-                        break;
-                    case "Last 3 months":
-                        startDate = new Date(currentDate.setMonth(currentDate.getMonth() - 3));
-                        break;
-                    case "Last year":
-                        startDate = new Date(currentDate.setFullYear(currentDate.getFullYear() - 1));
-                        break;
-                    default:
-                        startDate = currentDate;
-                        break;
-                }
-                endDate = new Date();
-            }
-
-            // Fetch stock movements by furnitureId and date range
+            // Fetch all stock movements by furnitureId
             const movementsResponse = await axios.get(`http://localhost:3000/api/stock-movements/${id}/movements`, {
-                params: { startDate: startDate.toISOString(), endDate: endDate.toISOString() },
                 method: 'get',
                 withCredentials: true
             });
 
             if (movementsResponse.data.length === 0) {
-                setNoDataFound(true); // No data found for the selected period
+                setNoDataFound(true); // No data found
             } else {
                 setStockMovements(movementsResponse.data);
                 setNoDataFound(false); // Reset if data is found
             }
         } catch (error) {
-            console.error("Error fetching product details or stock movements:", error);
+            // Handle error (no logs required)
         }
     };
 
+    // Filter movements based on time period or custom dates
+    useEffect(() => {
+        if (stockMovements.length === 0) return;
+
+        let filtered = [...stockMovements];
+        const currentDate = new Date();
+
+        if (customStartDate && customEndDate) {
+            const startDate = new Date(customStartDate);
+            const endDate = new Date(customEndDate);
+            filtered = filtered.filter(
+                (movement) =>
+                    new Date(movement.createdAt) >= startDate && new Date(movement.createdAt) <= endDate
+            );
+        } else {
+            switch (timePeriod) {
+                case "Last 30 days":
+                    filtered = filtered.filter(
+                        (movement) => new Date(movement.createdAt) >= new Date(currentDate.setDate(currentDate.getDate() - 30))
+                    );
+                    break;
+                case "Last 3 months":
+                    filtered = filtered.filter(
+                        (movement) => new Date(movement.createdAt) >= new Date(currentDate.setMonth(currentDate.getMonth() - 3))
+                    );
+                    break;
+                case "Last year":
+                    filtered = filtered.filter(
+                        (movement) => new Date(movement.createdAt) >= new Date(currentDate.setFullYear(currentDate.getFullYear() - 1))
+                    );
+                    break;
+                default:
+                    break;
+            }
+        }
+        setFilteredMovements(filtered);
+    }, [stockMovements, timePeriod, customStartDate, customEndDate]);
+
     // Prepare data for the chart
     const stockData = {
-        labels: Array.isArray(stockMovements) && stockMovements.length > 0
-            ? stockMovements.map((movement) => new Date(movement.createdAt).toLocaleDateString())
+        labels: Array.isArray(filteredMovements) && filteredMovements.length > 0
+            ? filteredMovements.map((movement) => new Date(movement.createdAt).toLocaleDateString())
             : ['No movements'], // If no movements, show a placeholder label
         datasets: [
             {
                 label: "Stock Level",
-                data: Array.isArray(stockMovements) && stockMovements.length > 0
-                    ? stockMovements.map((movement) => movement.quantity)
+                data: Array.isArray(filteredMovements) && filteredMovements.length > 0
+                    ? filteredMovements.map((movement) => movement.quantity)
                     : [selectedProduct?.quantity], // If no movements, use the initial stock quantity
                 fill: false,
                 backgroundColor: "rgb(75, 192, 192)",
                 borderColor: "rgba(75, 192, 192, 0.2)",
             },
         ],
+    };
+
+    // Handle date range application
+    const handleApplyDateFilter = () => {
+        setFilteredMovements(stockMovements); // Re-filter movements based on selected dates or time period
     };
 
     if (!selectedProduct) return <p>Loading product details...</p>;
@@ -137,7 +161,9 @@ const Products = () => {
 
                 {/* Search Results */}
                 <div className="space-y-2">
-                    {Array.isArray(searchResults) && searchResults.length > 0 ? (
+                    {isLoading ? (
+                        <Typography>Loading search results...</Typography> // Loading state
+                    ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
                         searchResults.map((product) => (
                             <Typography
                                 key={product._id}
@@ -164,50 +190,49 @@ const Products = () => {
                 </Select>
 
                 {/* Custom Date Range */}
-                <div className="flex flex-col space-y-4 mt-4">
+                <div className="flex space-x-2 mt-4">
                     <Input
                         type="date"
                         label="Start Date"
                         value={customStartDate}
-                        onChange={(e) => setCustomStartDate(e.target.value)}
-                        className="mb-4"
+                        onChange={(e) => setCustomStartDate(e.target.value)} // Track custom start date
                     />
                     <Input
                         type="date"
                         label="End Date"
                         value={customEndDate}
-                        onChange={(e) => setCustomEndDate(e.target.value)}
+                        onChange={(e) => setCustomEndDate(e.target.value)} // Track custom end date
                     />
+                    <Button onClick={handleApplyDateFilter}>Apply</Button>
+                </div>
+
+                {/* Furniture Details Table */}
+                <div className="mt-6 overflow-x-auto">
+                    <table className="min-w-full table-auto">
+                        <thead>
+                        <tr className="bg-gray-700">
+                            <th className="px-4 py-2 text-left">Name</th>
+                            <th className="px-4 py-2 text-left">Quantity</th>
+                            <th className="px-4 py-2 text-left">Description</th>
+                            <th className="px-4 py-2 text-left">Location</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td className="px-4 py-2">{selectedProduct.name}</td>
+                            <td className="px-4 py-2">{selectedProduct.quantity}</td>
+                            <td className="px-4 py-2">{selectedProduct.description}</td>
+                            <td className="px-4 py-2">{selectedProduct.location}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div className="mb-6">
-                <Typography>Creation Date: {selectedProduct.createdAt}</Typography>
-                <Typography>Location: {selectedProduct.location}</Typography>
-                <Typography>Stock: {selectedProduct.quantity}</Typography>
-                <Typography>Description: {selectedProduct.description}</Typography>
+            {/* Chart */}
+            <div className="mt-6">
+                <Line data={stockData} options={{ responsive: true }} />
             </div>
-
-            {/* Display message if no data found */}
-            {noDataFound ? (
-                <Typography className="text-red-500">No data found for the selected dates</Typography>
-            ) : (
-                <div>
-                    <Typography variant="h6" className="mb-4">
-                        Stock Level Over {timePeriod}
-                    </Typography>
-                    <Line
-                        data={stockData}
-                        options={{
-                            responsive: true,
-                            plugins: {
-                                legend: { position: "top" },
-                                title: { display: true, text: `Stock Levels of ${selectedProduct.name}` },
-                            },
-                        }}
-                    />
-                </div>
-            )}
         </Card>
     );
 };
