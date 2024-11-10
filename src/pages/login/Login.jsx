@@ -21,12 +21,6 @@ const Login = () => {
         }
     }, [navigate, success, user]);
 
-    useEffect(() => {
-        if (userInfo) {
-            navigate('/');
-        }
-    }, [userInfo, navigate]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
