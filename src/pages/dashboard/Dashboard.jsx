@@ -19,7 +19,7 @@ const Dashboard = () => {
         // Fetch the dashboard data
         fetchDashboardData();
 
-        // Fetch Most Sold Products
+        // Fetch Most Sold ProductsDetails
         const fetchMostSold = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/furniture/most-sold',{
@@ -28,11 +28,11 @@ const Dashboard = () => {
                 });
                 setMostSoldProducts(response.data);
             } catch (error) {
-                console.error("Error fetching most sold products", error);
+                console.error("Error fetching most sold products_details", error);
             }
         };
 
-        // Fetch Highest Price Products
+        // Fetch Highest Price ProductsDetails
         const fetchHighestPrice = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/furniture/highest-price', {
@@ -41,17 +41,16 @@ const Dashboard = () => {
                 });
                 setHighestPriceProducts(response.data);
             } catch (error) {
-                console.error("Error fetching highest price products", error);
+                console.error("Error fetching highest price products_details", error);
             }
         };
-
 
         fetchMostSold();
         fetchHighestPrice();
     }, [fetchDashboardData]);
 
-    if (furnitureLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (furnitureLoading) return <div className="text-white">Loading...</div>;
+    if (error) return <div className="text-white">Error: {error}</div>;
 
     return (
         <div className="flex flex-col items-center space-y-6 min-h-screen text-white" style={{background: "#101923"}}>
@@ -60,19 +59,19 @@ const Dashboard = () => {
             <div className="flex space-x-6">
                 <Card className="text-center p-6 w-40" style={{ background: "#212D3B", color: "#FFFFFF" }}>
                     <Typography variant="h3" style={{ color: "#54A1DB" }}>{furnitureCount}</Typography>
-                    <Typography>Furniture Count</Typography>
+                    <Typography className="text-white">Furniture Count</Typography>
                 </Card>
                 <Card className="text-center p-6 w-40" style={{ background: "#212D3B", color: "#FFFFFF" }}>
                     <Typography variant="h3" style={{ color: "#54A1DB" }}>{userCount}</Typography>
-                    <Typography>Users</Typography>
+                    <Typography className="text-white">Users</Typography>
                 </Card>
             </div>
 
             {/* Flex container to display the tables side by side */}
             <div className="flex space-x-6 w-full max-w-7xl">
-                {/* Most Sold Products Table */}
+                {/* Most Sold ProductsDetails Table */}
                 <Card className="w-1/2 p-4 bg-gray-800">
-                    <Typography variant="h5" className="mb-4 text-center">Most Stock Products</Typography>
+                    <Typography variant="h5" className="mb-4 text-center text-white">Most Stock Products</Typography>
                     <div className="overflow-x-auto">
                         <table className="min-w-full bg-gray-700 border border-gray-600 rounded-lg">
                             <thead>
@@ -93,9 +92,9 @@ const Dashboard = () => {
                     </div>
                 </Card>
 
-                {/* Highest Price Products Table */}
+                {/* Highest Price ProductsDetails Table */}
                 <Card className="w-1/2 p-4 bg-gray-800">
-                    <Typography variant="h5" className="mb-4 text-center">Highest Price Products</Typography>
+                    <Typography variant="h5" className="mb-4 text-center text-white">Highest Price Products</Typography>
                     <div className="overflow-x-auto">
                         <table className="min-w-full bg-gray-700 border border-gray-600 rounded-lg">
                             <thead>

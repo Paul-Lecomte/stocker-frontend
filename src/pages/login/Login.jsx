@@ -31,7 +31,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center min-h-screen" style={{background: "#101923"}}>
+        <div className="flex flex-col justify-center items-center min-h-screen text-white" style={{background: "#101923"}}>
             <div>
                 <img
                     src={logo}
@@ -39,9 +39,9 @@ const Login = () => {
                     className="w-50 pb-4"
                 />
             </div>
-            <form onSubmit={handleSubmit} className="p-8 rounded-lg shadow-lg w-full max-w-sm"
-                  style={{background: "#212D3B", color: "#FFFFFF"}}>
-                <Typography variant="h4" className="mb-6 text-center">
+            <form onSubmit={handleSubmit} className="p-8 rounded-lg shadow-lg w-full max-w-sm text-white"
+                  style={{background: "#212D3B"}}>
+                <Typography variant="h4" className="mb-6 text-center text-white">
                     Login
                 </Typography>
 
@@ -52,9 +52,10 @@ const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        color="blue"
+                        color="white"
                         size="lg"
                         autoComplete="email"
+                        className="text-white"
                     />
                 </div>
 
@@ -65,14 +66,15 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        color="blue"
+                        color="white"
                         size="lg"
                         autoComplete="current-password"
+                        className="text-white"
                     />
                 </div>
 
                 {error && (
-                    <Typography color="red" className="mb-4 text-sm text-center">
+                    <Typography color="red" className="mb-4 text-sm text-center text-white">
                         {error}
                     </Typography>
                 )}

@@ -1,11 +1,12 @@
 import { Line } from "react-chartjs-2";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Card, Input, Typography, Button, Spinner } from "@material-tailwind/react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Card, Input, Select, Typography, Button, Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import debounce from "lodash/debounce"; // Import debounce from lodash
 
-const Products = () => {
+const ProductsDetails = () => {
+    const { id } = useParams(); // Get the product ID (furnitureId) from URL params
     const navigate = useNavigate(); // For navigation
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [timePeriod, setTimePeriod] = useState("Last 30 days");
@@ -17,6 +18,13 @@ const Products = () => {
     const [searchResults, setSearchResults] = useState([]); // Track the search results
     const [noDataFound, setNoDataFound] = useState(false); // Track if no data is found
     const [isLoading, setIsLoading] = useState(false); // Track loading state for search
+
+    // Fetch product details and stock movements when furnitureId or other dependencies change
+    useEffect(() => {
+        if (id) {
+            fetchProductById(id); // Fetch product details and stock movements by furnitureId
+        }
+    }, [id, timePeriod, customStartDate, customEndDate]);
 
     // Debounced search
     const fetchSearchResults = debounce(async (query) => {
@@ -46,7 +54,7 @@ const Products = () => {
     };
 
     const handleFurnitureSelect = (furnitureId) => {
-        fetchProductById(furnitureId); // Fetch product details and stock movements by furnitureId
+        navigate(`/products/${furnitureId}`); // Redirect to product page
     };
 
     const fetchProductById = async (id) => {
@@ -145,7 +153,7 @@ const Products = () => {
         responsive: true,
         plugins: {
             legend: { position: "top", labels: { color: "white" } },
-            title: { display: true, color: "white", text: "Stock Levels of Selected Products" },
+            title: { display: true, color: "white", text: "Stock Levels of Selected ProductsDetails" },
         },
         scales: {
             x: {
@@ -164,17 +172,12 @@ const Products = () => {
         setFilteredMovements(stockMovements); // Re-filter movements based on selected dates or time period
     };
 
-    // Handle redirect to product details page
-    const handleGoToProductDetails = () => {
-        if (selectedProduct) {
-            navigate(`/products_details/${selectedProduct._id}`); // Navigate to product details page with the selected product ID
-        }
-    };
+    if (!selectedProduct) return <Spinner className="h-10 w-10" color="blue" />
 
     return (
         <Card className="p-6 bg-gray-800 text-white rounded-none">
             <div className="flex flex-col mb-4 space-y-2">
-                <Typography variant="h6">Product Search</Typography>
+                <Typography variant="h6">{selectedProduct.name} Details</Typography>
 
                 {/* Search Input */}
                 <Input
@@ -200,7 +203,7 @@ const Products = () => {
                             </Typography>
                         ))
                     ) : (
-                        <span>No results found</span> // Show a message if no results
+                        <span></span> // Show a message if no results
                     )}
                 </div>
 
@@ -227,28 +230,21 @@ const Products = () => {
                 <div className="mt-6 overflow-x-auto">
                     <table className="min-w-full table-auto">
                         <thead>
-                        <tr className="text-left border-b">
-                            <th className="px-4 py-2">Name</th>
-                            <th className="px-4 py-2">Quantity</th>
-                            <th className="px-4 py-2">Price</th>
+                        <tr className="bg-gray-700">
+                            <th className="px-4 py-2 text-left">Name</th>
+                            <th className="px-4 py-2 text-left">Price</th>
+                            <th className="px-4 py-2 text-left">Quantity</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {selectedProduct && (
-                            <tr>
-                                <td className="px-4 py-2">{selectedProduct.name}</td>
-                                <td className="px-4 py-2">{selectedProduct.quantity}</td>
-                                <td className="px-4 py-2">${selectedProduct.price}</td>
-                            </tr>
-                        )}
+                        <tr>
+                            <td className="border px-4 py-2">{selectedProduct.name}</td>
+                            <td className="border px-4 py-2">{selectedProduct.price}</td>
+                            <td className="border px-4 py-2">{selectedProduct.quantity}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
-
-                {/* Button to go to Product Details Page */}
-                <Button color="blue" className="mt-4" onClick={handleGoToProductDetails}>
-                    View Product Details
-                </Button>
             </div>
 
             {/* Chart */}
@@ -259,4 +255,4 @@ const Products = () => {
     );
 };
 
-export default Products;
+export default ProductsDetails;

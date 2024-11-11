@@ -11,10 +11,10 @@ const ErrorPage = () => {
                 <Typography variant="h5" className="mb-6">
                     Oops! Page not found.
                 </Typography>
-                <Typography variant="body1" className="mb-6">
+                <Typography variant="lead" className="mb-6">
                     The page you’re looking for doesn’t exist or has been moved.
                 </Typography>
-                <Button color="lightBlue" onClick={() => window.location.href = "/"}>
+                <Button color="light-blue" onClick={() => window.location.href = "/"}>
                     Go to Home
                 </Button>
             </Card>

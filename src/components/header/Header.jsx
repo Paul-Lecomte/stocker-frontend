@@ -15,7 +15,7 @@ const Header = () => {
     }, []);
 
     return (
-        <header className="flex w-9/12 justify-between items-center p-4 right-0 fixed z-10">
+        <header className="flex w-9/12 justify-between items-center p-4 right-0 fixed z-10" style={{ background: "#212D3B" }}>
             <p style={{color: "#8FBCDF"}}>{dateTime}</p>
             <div className="flex items-center space-x-2">
                 <AvatarWithUserDropdown></AvatarWithUserDropdown>

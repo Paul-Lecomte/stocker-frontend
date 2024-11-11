@@ -6,7 +6,6 @@ import {
     List,
     ListItem,
     ListItemPrefix,
-    ListItemSuffix,
 } from "@material-tailwind/react";
 import {
     PresentationChartBarIcon,
@@ -15,13 +14,13 @@ import {
     InboxIcon,
 } from "@heroicons/react/24/solid";
 import { MdOutlineInventory } from "react-icons/md";
-import './nav.css'
-import colors from "tailwindcss/colors.js";
+import './nav.css';
+import { Link } from "react-router-dom";
 
 const Nav = () => {
     return (
-        <Card className="flex items-center w-3/12 h-full fixed top-0 rounded-none"
-              style={{background: "#212D3B", color: "#4F5C6B"}}>
+        <Card className="flex items-center w-3/12 h-full fixed top-0 rounded-none text-white"
+              style={{ background: "#212D3B" }}>
             <div className="mb-2 py-10">
                 <img
                     src={logo}
@@ -30,36 +29,36 @@ const Nav = () => {
                 />
             </div>
             <List>
-                <ListItem className="text-2xl py-5">
+                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
-                        <PresentationChartBarIcon className="h-7 w-7"/>
+                        <PresentationChartBarIcon className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
-                    <a href="/">Dashboard</a>
+                    <Link to={"/"} className="text-white">Dashboard</Link>
                 </ListItem>
-                <ListItem className="text-2xl py-5">
+                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
-                        <UserCircleIcon className="h-7 w-7"/>
+                        <UserCircleIcon className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
-                    <a href="/user-management">User Management</a>
+                    <Link to={"/user-management"} className="text-white">User Management</Link>
                 </ListItem>
-                <ListItem className="text-2xl py-5">
+                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
-                        <InboxIcon className="h-7 w-7"/>
+                        <InboxIcon className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
-                    <a href="/movement">Movement</a>
+                    <Link to={"/movement"} className="text-white">Movement</Link>
                 </ListItem>
-                <ListItem className="text-2xl py-5">
+                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
-                        <ShoppingBagIcon className="h-7 w-7"/>
+                        <ShoppingBagIcon className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
-                    <a href="/products">Products</a>
+                    <Link to={"/products"} className="text-white">Products</Link>
                 </ListItem>
 
-                <ListItem className="text-2xl py-5">
+                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
-                        <MdOutlineInventory className="h-7 w-7"/>
+                        <MdOutlineInventory className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
-                    <a href="/inventory">Inventory</a>
+                    <Link to={"/inventory"} className="text-white">Inventory</Link>
                 </ListItem>
             </List>
         </Card>
