@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input } from "@material-tailwind/react";
+import { Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input, Select, Option } from "@material-tailwind/react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Inventory = () => {
     const [inventoryData, setInventoryData] = useState([]);
+    const [aisles, setAisles] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [editData, setEditData] = useState({ name: '', quantity: '', price: '', description: '', location: '' });
+    const [isAisleDialogOpen, setIsAisleDialogOpen] = useState(false);
+    const [aisleLocation, setAisleLocation] = useState('');
     const navigate = useNavigate();
 
-    // Fetch inventory data from backend on component mount
+    // Fetch inventory and aisle data from backend on component mount
     useEffect(() => {
         const fetchInventory = async () => {
             try {
@@ -23,9 +26,51 @@ const Inventory = () => {
                 console.error("Error fetching inventory data:", error);
             }
         };
+
+        const fetchAisles = async () => {
+            try {
+                const { data } = await axios.get('http://localhost:3000/api/aisles/all', {
+                    method: 'get',
+                    withCredentials: true
+                });
+                setAisles(data);
+            } catch (error) {
+                console.error("Error fetching aisles:", error);
+            }
+        };
+
         fetchInventory();
+        fetchAisles();
     }, []);
 
+    // Handle aisle addition
+    const handleAddAisle = async () => {
+        try {
+            const { data } = await axios.post('http://localhost:3000/api/aisles/', { location: aisleLocation }, {
+                method: 'post',
+                withCredentials: true
+            });
+            setAisles([...aisles, data]);
+            setAisleLocation(''); // Clear input
+        } catch (error) {
+            console.error("Error adding aisle:", error);
+        }
+    };
+
+    // Handle aisle deletion
+    const handleDeleteAisle = async (id) => {
+        try {
+            await axios.delete(`http://localhost:3000/api/aisles/${id}`, {
+                method: 'delete',
+                withCredentials: true
+            });
+            setAisles(aisles.filter((aisle) => aisle._id !== id));
+        } catch (error) {
+            console.error("Error deleting aisle:", error);
+        }
+    };
+
+    // Handle item delete
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:3000/api/furniture/delete/${id}`, {
@@ -38,6 +83,7 @@ const Inventory = () => {
         }
     };
 
+    // Handle edit click
     const handleEditClick = (item) => {
         setEditData({
             _id: item._id,
@@ -51,17 +97,25 @@ const Inventory = () => {
         setIsDialogOpen(true);
     };
 
+    // Handle add click
     const handleAddClick = () => {
         setEditData({ name: '', quantity: '', price: '', description: '', location: '' });
         setIsAddMode(true);
         setIsDialogOpen(true);
     };
 
+    // Handle change in fields
     const handleEditChange = (e) => {
         const { name, value } = e.target;
         setEditData({ ...editData, [name]: value });
     };
 
+    // Handle location change
+    const handleLocationChange = (value) => {
+        setEditData({ ...editData, location: value });
+    };
+
+    // Save item (add or update)
     const handleSave = async () => {
         try {
             // Validate fields based on the mode (Add or Edit)
@@ -95,6 +149,7 @@ const Inventory = () => {
         }
     };
 
+    // Handle product details view
     const handleDetailsClick = (id) => {
         navigate(`/products_details/${id}`);
     };
@@ -105,10 +160,17 @@ const Inventory = () => {
                 <Typography variant="h6" color="white">
                     Inventory
                 </Typography>
-                <Button size="sm" color="green" onClick={handleAddClick}>
-                    Add Entry
-                </Button>
+                <div className="flex gap-2">
+                    <Button size="sm" color="green" onClick={handleAddClick}>
+                        Add Entry
+                    </Button>
+                    <Button size="sm" color="orange" onClick={() => setIsAisleDialogOpen(true)}>
+                        Add/Delete Aisle
+                    </Button>
+                </div>
             </div>
+
+            {/* Inventory Table */}
             <table className="min-w-full text-left text-sm">
                 <thead>
                 <tr className="bg-gray-700">
@@ -140,14 +202,57 @@ const Inventory = () => {
                 </tbody>
             </table>
 
+            {/* Aisle Management Dialog */}
+            <Dialog open={isAisleDialogOpen} handler={() => setIsAisleDialogOpen(!isAisleDialogOpen)}>
+                <DialogBody>
+                    <Typography variant="h6">Manage Aisles</Typography>
+                    <div className="flex flex-col gap-4 mt-4">
+                        <Input
+                            label="New Aisle Location"
+                            value={aisleLocation}
+                            onChange={(e) => setAisleLocation(e.target.value)}
+                        />
+                        <Button color="green" onClick={handleAddAisle}>Add Aisle</Button>
+
+                        <Typography variant="h6" className="mt-6">Existing Aisles</Typography>
+                        <ul className="list-disc ml-4">
+                            {aisles.map((aisle) => (
+                                <li key={aisle._id} className="flex justify-between items-center">
+                                    <span>{aisle.location}</span>
+                                    <Button
+                                        size="sm"
+                                        color="red"
+                                        onClick={() => handleDeleteAisle(aisle._id)}>
+                                        Delete
+                                    </Button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </DialogBody>
+                <DialogFooter>
+                    <Button color="gray" onClick={() => setIsAisleDialogOpen(false)}>
+                        Close
+                    </Button>
+                </DialogFooter>
+            </Dialog>
+
+            {/* Inventory Item Edit/Add Dialog */}
             <Dialog open={isDialogOpen} handler={() => setIsDialogOpen(!isDialogOpen)}>
                 <DialogBody>
-                    <div className="flex flex-col gap-4">
+                    <Typography variant="h6">{isAddMode ? "Add" : "Edit"} Item</Typography>
+                    <div className="flex flex-col gap-4 mt-4">
                         <Input label="Name" name="name" value={editData.name} onChange={handleEditChange} />
                         <Input label="Quantity" name="quantity" type="number" value={editData.quantity} onChange={handleEditChange} />
                         <Input label="Price" name="price" value={editData.price} onChange={handleEditChange} />
                         <Input label="Description" name="description" value={editData.description} onChange={handleEditChange} />
-                        <Input label="Location" name="location" value={editData.location} onChange={handleEditChange} />
+
+                        {/* Location select dropdown */}
+                        <Select label="Location" name="location" value={editData.location} onChange={handleLocationChange}>
+                            {aisles.map((aisle) => (
+                                <Option key={aisle._id} value={aisle.location}>{aisle.location}</Option>
+                            ))}
+                        </Select>
                     </div>
                 </DialogBody>
                 <DialogFooter>

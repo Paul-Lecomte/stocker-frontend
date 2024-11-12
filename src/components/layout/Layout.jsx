@@ -12,9 +12,9 @@ const Layout = () => {
         // Check if userInfo exists in localStorage (indicating that the user is logged in)
         const userInfoFromStorage = localStorage.getItem('userInfo');
 
-        // If userInfo doesn't exist, redirect to login page
-        if (!userInfoFromStorage) {
-            navigate('/login');  // Redirect to login if not logged in
+        // If userInfo doesn't exist or is empty, redirect to login page
+        if (!userInfoFromStorage || userInfoFromStorage === '') {
+            navigate('/login');  // Redirect to login if not logged in or if userInfo is empty
         }
     }, [navigate]);  // Only rerun this effect when navigate changes
 
