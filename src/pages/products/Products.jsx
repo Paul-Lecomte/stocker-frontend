@@ -1,84 +1,73 @@
 import { Line } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Input, Typography, Button, Spinner } from "@material-tailwind/react";
+import {Card, Input, Typography, Button, Spinner, Dialog} from "@material-tailwind/react";
 import axios from "axios";
-import debounce from "lodash/debounce"; // Import debounce from lodash
+import debounce from "lodash/debounce";
 
 const Products = () => {
-    const navigate = useNavigate(); // For navigation
+    const navigate = useNavigate();
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [timePeriod, setTimePeriod] = useState("Last 30 days");
     const [stockMovements, setStockMovements] = useState([]);
     const [filteredMovements, setFilteredMovements] = useState([]);
-    const [customStartDate, setCustomStartDate] = useState(""); // Track custom start date
-    const [customEndDate, setCustomEndDate] = useState(""); // Track custom end date
-    const [searchQuery, setSearchQuery] = useState(""); // Track the search query
-    const [searchResults, setSearchResults] = useState([]); // Track the search results
-    const [noDataFound, setNoDataFound] = useState(false); // Track if no data is found
-    const [isLoading, setIsLoading] = useState(false); // Track loading state for search
+    const [customStartDate, setCustomStartDate] = useState("");
+    const [customEndDate, setCustomEndDate] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [noDataFound, setNoDataFound] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Debounced search
     const fetchSearchResults = debounce(async (query) => {
         if (!query.trim()) {
-            setSearchResults([]); // Clear search results if query is empty
+            setSearchResults([]);
             return;
         }
 
         try {
-            setIsLoading(true); // Start loading
+            setIsLoading(true);
             const response = await axios.get(`http://localhost:3000/api/furniture/search`, {
-                params: { name: query }, // Send 'name' as the query parameter
-                method: "get",
+                params: { name: query },
                 withCredentials: true,
             });
             setSearchResults(response.data);
-            setIsLoading(false); // End loading
+            setIsLoading(false);
         } catch (error) {
-            setIsLoading(false); // End loading even if there's an error
+            setIsLoading(false);
         }
-    }, 500); // 500ms debounce delay
+    }, 500);
 
-    // Handle search query change and call debounced search
     const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value); // Update search query
-        fetchSearchResults(e.target.value); // Trigger search after debounce
+        setSearchQuery(e.target.value);
+        fetchSearchResults(e.target.value);
     };
 
     const handleFurnitureSelect = (furnitureId) => {
-        fetchProductById(furnitureId); // Fetch product details and stock movements by furnitureId
+        fetchProductById(furnitureId);
     };
 
     const fetchProductById = async (id) => {
         try {
-            // Fetch product details by ID
             const productResponse = await axios.get(`http://localhost:3000/api/furniture/${id}`, {
-                method: "get",
                 withCredentials: true,
             });
             setSelectedProduct(productResponse.data);
 
-            // Fetch all stock movements by furnitureId
             const movementsResponse = await axios.get(
                 `http://localhost:3000/api/stock-movements/${id}/movements`,
-                {
-                    method: "get",
-                    withCredentials: true,
-                }
+                { withCredentials: true }
             );
 
             if (movementsResponse.data.length === 0) {
-                setNoDataFound(true); // No data found
+                setNoDataFound(true);
             } else {
                 setStockMovements(movementsResponse.data);
-                setNoDataFound(false); // Reset if data is found
+                setNoDataFound(false);
             }
-        } catch (error) {
-            // Handle error (no logs required)
-        }
+        } catch (error) {}
     };
 
-    // Filter movements based on time period or custom dates
     useEffect(() => {
         if (stockMovements.length === 0) return;
 
@@ -119,28 +108,26 @@ const Products = () => {
         setFilteredMovements(filtered);
     }, [stockMovements, timePeriod, customStartDate, customEndDate]);
 
-    // Prepare data for the chart
     const chartData = {
         labels:
             Array.isArray(filteredMovements) && filteredMovements.length > 0
                 ? filteredMovements.map((movement) => new Date(movement.createdAt).toLocaleDateString())
-                : ["No movements"], // If no movements, show a placeholder label
+                : ["No movements"],
         datasets: [
             {
                 label: "Stock Level",
                 data:
                     Array.isArray(filteredMovements) && filteredMovements.length > 0
                         ? filteredMovements.map((movement) => movement.quantity)
-                        : [selectedProduct?.quantity], // If no movements, use the initial stock quantity
+                        : [selectedProduct?.quantity],
                 fill: false,
-                backgroundColor: "rgb(255, 255, 255)", // White background color for the line
-                borderColor: "rgba(255, 255, 255, 0.7)", // Light white border for the line
+                backgroundColor: "rgb(255, 255, 255)",
+                borderColor: "rgba(255, 255, 255, 0.7)",
                 tension: 0.1,
             },
         ],
     };
 
-    // Chart options with the provided customization
     const chartOptions = {
         responsive: true,
         plugins: {
@@ -159,16 +146,18 @@ const Products = () => {
         },
     };
 
-    // Handle date range application
     const handleApplyDateFilter = () => {
-        setFilteredMovements(stockMovements); // Re-filter movements based on selected dates or time period
+        setFilteredMovements(stockMovements);
     };
 
-    // Handle redirect to product details page
-    const handleGoToProductDetails = () => {
-        if (selectedProduct) {
-            navigate(`/products_details/${selectedProduct._id}`); // Navigate to product details page with the selected product ID
-        }
+    // Open the modal
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    // Close the modal
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -181,7 +170,7 @@ const Products = () => {
                     label="Search Furniture"
                     color="white"
                     value={searchQuery}
-                    onChange={handleSearchChange} // Handle real-time search
+                    onChange={handleSearchChange}
                     className="mb-4"
                 />
 
@@ -224,32 +213,51 @@ const Products = () => {
                 </div>
 
                 {/* Furniture Details Table */}
-                <div className="mt-6 overflow-x-auto">
-                    <table className="min-w-full table-auto">
-                        <thead>
-                        <tr className="text-left border-b">
-                            <th className="px-4 py-2">Name</th>
-                            <th className="px-4 py-2">Quantity</th>
-                            <th className="px-4 py-2">Price</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {selectedProduct && (
-                            <tr>
-                                <td className="px-4 py-2">{selectedProduct.name}</td>
-                                <td className="px-4 py-2">{selectedProduct.quantity}</td>
-                                <td className="px-4 py-2">${selectedProduct.price}</td>
+                <div className="mt-6 flex">
+                    {/* Table */}
+                    <div className="overflow-x-auto w-3/4">
+                        <table className="min-w-full table-auto">
+                            <thead>
+                            <tr className="text-left border-b">
+                                <th className="px-4 py-2">Name</th>
+                                <th className="px-4 py-2">Quantity</th>
+                                <th className="px-4 py-2">Price</th>
                             </tr>
-                        )}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                            {selectedProduct && (
+                                <tr>
+                                    <td className="px-4 py-2">{selectedProduct.name}</td>
+                                    <td className="px-4 py-2">{selectedProduct.quantity}</td>
+                                    <td className="px-4 py-2">${selectedProduct.price}</td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
 
-                {/* Button to go to Product Details Page */}
-                <Button color="blue" className="mt-4" onClick={handleGoToProductDetails}>
-                    View Product Details
-                </Button>
+                    {/* Product Image */}
+                    {selectedProduct && selectedProduct.picture && (
+                        <div className="flex justify-center items-center mt-6">
+                            <img
+                                src={`http://localhost:3000/${selectedProduct.picture}`}
+                                alt={selectedProduct.name}
+                                className="w-40 h-40 object-contain rounded-lg cursor-pointer"
+                                onClick={openModal}
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
+            {/* Modal for larger image */}
+            <Dialog open={isModalOpen} onClose={closeModal} className="p-6 bg-gray-800 text-white rounded-md flex flex-col">
+                <img
+                    src={`http://localhost:3000/${selectedProduct?.picture}`}
+                    alt={selectedProduct?.name}
+                    className="max-w-full max-h-full"
+                />
+                <Button className="mt-4" onClick={closeModal}>Close</Button>
+            </Dialog>
 
             {/* Chart */}
             <div className="mt-6">

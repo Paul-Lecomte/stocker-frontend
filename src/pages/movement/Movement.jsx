@@ -31,7 +31,7 @@ const Movement = () => {
 
                     const latestStockQuantity = product.movements.length
                         ? product.movements[0].quantity
-                        : 'N/A';
+                        : product.quantity; // Use current quantity as fallback
 
                     return {
                         id: product._id,
@@ -46,7 +46,7 @@ const Movement = () => {
                 setSelectedProducts(products.map(product => product.id)); // Select all by default
                 setFilteredDataWithDates(products); // Initialize the filtered data
             } catch (error) {
-                console.error("Error fetching products_details data:", error);
+                console.error("Error fetching products data:", error);
             } finally {
                 setLoading(false);
             }
@@ -85,7 +85,7 @@ const Movement = () => {
                 ...product,
                 movements: filteredMovements,
                 latestMovementDate: filteredMovements.length ? new Date(filteredMovements[0].createdAt).toLocaleDateString() : 'N/A',
-                latestStockQuantity: filteredMovements.length ? filteredMovements[0].quantity : 'N/A',
+                latestStockQuantity: filteredMovements.length ? filteredMovements[0].quantity : product.latestStockQuantity, // Fallback to current quantity
             };
         });
 
@@ -95,13 +95,15 @@ const Movement = () => {
     if (loading) return <p>Loading...</p>;
 
     // Chart Data
-    const chartLabels = filteredDataWithDates[0]?.movements.map(movement => new Date(movement.createdAt).toLocaleDateString()) || [];
+    const chartLabels = filteredDataWithDates[0]?.movements.map(movement => new Date(movement.createdAt).toLocaleDateString()) || ['Current Quantity'];
 
     const chartData = {
         labels: chartLabels,
         datasets: filteredDataWithDates.map((product, index) => ({
             label: product.name,
-            data: product.movements.map(movement => movement.quantity), // Showing historical stock quantities
+            data: product.movements.length
+                ? product.movements.map(movement => movement.quantity)
+                : [product.latestStockQuantity], // Use current quantity if no movements
             fill: false,
             backgroundColor: `hsl(${index * 70}, 70%, 50%)`,
             borderColor: `hsl(${index * 70}, 70%, 70%)`,
@@ -165,7 +167,7 @@ const Movement = () => {
                     responsive: true,
                     plugins: {
                         legend: { position: 'top', labels: { color: 'white' } },
-                        title: { display: true, color: 'white', text: 'Stock Levels of Selected ProductsDetails' },
+                        title: { display: true, color: 'white', text: 'Stock Levels of Selected Products' },
                     },
                     scales: {
                         x: {

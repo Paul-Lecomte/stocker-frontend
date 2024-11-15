@@ -9,6 +9,7 @@ const Inventory = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [editData, setEditData] = useState({ name: '', quantity: '', price: '', description: '', location: '' });
+    const [picture, setPicture] = useState(null); // New state for the picture file
     const [isAisleDialogOpen, setIsAisleDialogOpen] = useState(false);
     const [aisleLocation, setAisleLocation] = useState('');
     const navigate = useNavigate();
@@ -115,35 +116,44 @@ const Inventory = () => {
         setEditData({ ...editData, location: value });
     };
 
-    // Save item (add or update)
+    // Handle picture file change
+    const handlePictureChange = (e) => {
+        setPicture(e.target.files[0]);
+    };
+
+    // Save item (add or update) with picture upload
     const handleSave = async () => {
         try {
-            // Validate fields based on the mode (Add or Edit)
             if (isAddMode) {
-                // Validation for add mode (all fields are required)
                 if (!editData.name || !editData.quantity || !editData.price || !editData.description || !editData.location) {
                     console.error("Missing required fields for creation");
-                    return; // Prevent sending the request if fields are missing
+                    return;
                 }
             }
 
-            if (isAddMode) {
-                // Add item if in "add" mode
-                const { data } = await axios.post('http://localhost:3000/api/furniture/create', editData, {
-                    method: 'post',
-                    withCredentials: true
-                });
-                setInventoryData([...inventoryData, data]);
-            } else {
-                // Update item if in "edit" mode (fields are optional)
-                const { data } = await axios.put(`http://localhost:3000/api/furniture/update/${editData._id}`, editData, {
-                    method: 'put',
-                    withCredentials: true
-                });
-                setInventoryData(inventoryData.map((item) => (item._id === data._id ? data : item)));
-            }
+            const formData = new FormData();
+            formData.append("name", editData.name);
+            formData.append("quantity", editData.quantity);
+            formData.append("price", editData.price);
+            formData.append("description", editData.description);
+            formData.append("location", editData.location);
+            if (picture) formData.append("picture", picture); // Append picture if provided
 
-            setIsDialogOpen(false); // Close dialog after saving
+            const url = isAddMode ?
+                'http://localhost:3000/api/furniture/create' :
+                `http://localhost:3000/api/furniture/update/${editData._id}`;
+            const method = isAddMode ? 'post' : 'put';
+
+            const { data } = await axios({
+                url,
+                method,
+                data: formData,
+                withCredentials: true,
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+            setInventoryData(isAddMode ? [...inventoryData, data] : inventoryData.map(item => item._id === data._id ? data : item));
+            setIsDialogOpen(false);
         } catch (error) {
             console.error("Error saving item:", error.response ? error.response.data : error);
         }
@@ -231,9 +241,7 @@ const Inventory = () => {
                     </div>
                 </DialogBody>
                 <DialogFooter>
-                    <Button color="gray" onClick={() => setIsAisleDialogOpen(false)}>
-                        Close
-                    </Button>
+                    <Button color="gray" onClick={() => setIsAisleDialogOpen(false)}>Close</Button>
                 </DialogFooter>
             </Dialog>
 
@@ -253,6 +261,9 @@ const Inventory = () => {
                                 <Option key={aisle._id} value={aisle.location}>{aisle.location}</Option>
                             ))}
                         </Select>
+
+                        {/* New File Input for Picture */}
+                        <Input label="Picture" type="file" onChange={handlePictureChange} />
                     </div>
                 </DialogBody>
                 <DialogFooter>
