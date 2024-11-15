@@ -1,0 +1,20 @@
+.secret-animation {
+    position: absolute;
+    bottom: 50px;
+    left: -200px;
+    animation: runAcross 5s linear forwards;
+}
+
+@keyframes runAcross {
+    0% {
+        left: -200px;
+    }
+    100% {
+        left: 100%; /* Move across the screen */
+    }
+}
+
+.secret-animation img {
+    width: 100px;
+    height: auto;
+}
