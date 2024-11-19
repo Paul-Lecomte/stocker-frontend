@@ -10,7 +10,7 @@
         left: -200px;
     }
     100% {
-        left: 100%; /* Move across the screen */
+        left: 100%;
     }
 }
 

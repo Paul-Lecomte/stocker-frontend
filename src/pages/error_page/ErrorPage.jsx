@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Typography, Card } from "@material-tailwind/react";
-import './ErrorPage.css'; // Add the CSS file for the animation
+import './ErrorPage.css';
 
 const ErrorPage = () => {
     const [showAnimation, setShowAnimation] = useState(false);
 
-    // Trigger function for the Rick Roll link
     const trigger = () => {
         window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
     };

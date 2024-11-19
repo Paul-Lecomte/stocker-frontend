@@ -14,7 +14,6 @@ import {
     InboxIcon,
 } from "@heroicons/react/24/solid";
 import { MdOutlineInventory } from "react-icons/md";
-import './nav.css';
 import { Link } from "react-router-dom";
 
 const Nav = () => {
