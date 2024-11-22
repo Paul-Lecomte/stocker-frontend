@@ -220,6 +220,7 @@ const ProductsDetails = () => {
                                 <th className="px-4 py-2">Name</th>
                                 <th className="px-4 py-2">Quantity</th>
                                 <th className="px-4 py-2">Price</th>
+                                <th className="px-4 py-2">Location</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -228,6 +229,7 @@ const ProductsDetails = () => {
                                     <td className="px-4 py-2">{selectedProduct.name}</td>
                                     <td className="px-4 py-2">{selectedProduct.quantity}</td>
                                     <td className="px-4 py-2">${selectedProduct.price}</td>
+                                    <td className="px-4 py-2">{selectedProduct.location}</td>
                                 </tr>
                             )}
                             </tbody>
