@@ -160,6 +160,48 @@ const Products = () => {
         setIsModalOpen(false);
     };
 
+    const handleIncrementStock = async (quantity) => {
+        try {
+            const response = await axios.put(
+                `http://localhost:3000/api/furniture/increment/${selectedProduct._id}`,
+                { id: selectedProduct._id, quantity },
+                { withCredentials: true }
+            );
+
+            // Update the selected product details
+            setSelectedProduct(response.data.furniture);
+
+            // Refresh movements and product details
+            fetchProductById(selectedProduct._id);
+        } catch (error) {
+            console.error(
+                "Error incrementing stock:",
+                error.response?.data?.message || error.message
+            );
+        }
+    };
+
+    const handleDecrementStock = async (quantity) => {
+        try {
+            const response = await axios.put(
+                `http://localhost:3000/api/furniture/decrement/${selectedProduct._id}`,
+                { id: selectedProduct._id, quantity },
+                { withCredentials: true }
+            );
+
+            // Update the selected product details
+            setSelectedProduct(response.data.furniture);
+
+            // Refresh movements and product details
+            fetchProductById(selectedProduct._id);
+        } catch (error) {
+            console.error(
+                "Error decrementing stock:",
+                error.response?.data?.message || error.message
+            );
+        }
+    };
+
     return (
         <Card className="p-6 bg-gray-800 text-white rounded-none">
             <div className="flex flex-col mb-4 space-y-2">
@@ -177,7 +219,7 @@ const Products = () => {
                 {/* Search Results */}
                 <div className="space-y-2">
                     {isLoading ? (
-                        <Spinner className="h-10 w-10" color="blue" /> // Loading state
+                        <Spinner className="h-10 w-10" color="blue"/> // Loading state
                     ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
                         searchResults.map((product) => (
                             <Typography
@@ -252,7 +294,8 @@ const Products = () => {
                 </div>
             </div>
             {/* Modal for larger image */}
-            <Dialog open={isModalOpen} onClose={closeModal} className="p-6 bg-gray-800 text-white rounded-md flex flex-col">
+            <Dialog open={isModalOpen} onClose={closeModal}
+                    className="p-6 bg-gray-800 text-white rounded-md flex flex-col">
                 <img
                     src={`http://localhost:3000/${selectedProduct?.picture}`}
                     alt={selectedProduct?.name}
@@ -261,9 +304,18 @@ const Products = () => {
                 <Button className="mt-4" onClick={closeModal}>Close</Button>
             </Dialog>
 
+            <div className="flex items-center space-x-4 mt-4">
+                <Button color="green" onClick={() => handleIncrementStock(1)}>
+                    Increment
+                </Button>
+                <Button color="red" onClick={() => handleDecrementStock(1)}>
+                    Decrement
+                </Button>
+            </div>
+
             {/* Chart */}
             <div className="mt-6">
-                <Line data={chartData} options={chartOptions} />
+                <Line data={chartData} options={chartOptions}/>
             </div>
         </Card>
     );
