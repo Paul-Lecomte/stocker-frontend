@@ -135,7 +135,7 @@ const Movement = () => {
                     label="End Date"
                 />
             </div>
-            <Button color="blue" onClick={handleApplyDateFilter}>Apply Date Filter</Button>
+            <Button onClick={handleApplyDateFilter}>Apply Date Filter</Button>
 
             <div className="mb-6">
                 <Typography variant="h6" className="mb-2">Inventory Table</Typography>

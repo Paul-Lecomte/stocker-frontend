@@ -53,7 +53,7 @@ export function AvatarWithUserDropdown() {
                         withBorder={true}
                         color="blue-gray"
                         className="p-0.5"
-                        src="https://docs.material-tailwind.com/img/face-2.jpg"
+                        src="/user_default.png"
                     />
                 </Button>
             </MenuHandler>

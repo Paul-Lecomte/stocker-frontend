@@ -28,15 +28,15 @@ const Nav = () => {
     return (
         <Card className="flex items-center w-3/12 h-full fixed top-0 rounded-none text-white"
               style={{ background: "#212D3B" }}>
-            <div className="mb-2 py-10">
+            <div className="py-11">
                 <img
                     src={logo}
                     alt="logo"
                     className="w-40"
                 />
             </div>
-            <List>
-                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
+            <List className="h-2/3 flex flex-col justify-around">
+                <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
                         <PresentationChartBarIcon className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
@@ -44,20 +44,20 @@ const Nav = () => {
                 </ListItem>
                 {/* Conditionally render User Management link based on the user's role */}
                 {isSuperAdmin && (
-                    <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
+                    <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
                         <ListItemPrefix>
                             <UserCircleIcon className="h-7 w-7 text-white"/>
                         </ListItemPrefix>
                         <Link to={"/user-management"} className="text-white">User Management</Link>
                     </ListItem>
                 )}
-                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
+                <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
                         <InboxIcon className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
                     <Link to={"/movement"} className="text-white">Movement</Link>
                 </ListItem>
-                <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
+                <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
                     <ListItemPrefix>
                         <ShoppingBagIcon className="h-7 w-7 text-white"/>
                     </ListItemPrefix>
@@ -66,7 +66,7 @@ const Nav = () => {
 
                 {/* Conditionally render Inventory link based on admin or superadmin roles */}
                 {(isSuperAdmin || isAdmin) && (
-                    <ListItem className="text-2xl py-5 text-white hover:bg-gray-800 transition-colors duration-200">
+                    <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
                         <ListItemPrefix>
                             <MdOutlineInventory className="h-7 w-7 text-white"/>
                         </ListItemPrefix>

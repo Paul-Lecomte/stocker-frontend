@@ -1,7 +1,7 @@
 import { Line } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Card, Input, Typography, Button, Spinner, Dialog} from "@material-tailwind/react";
+import {Card, Input, Typography, Button, Spinner, Dialog, ButtonGroup} from "@material-tailwind/react";
 import axios from "axios";
 import debounce from "lodash/debounce";
 
@@ -219,7 +219,7 @@ const Products = () => {
                 {/* Search Results */}
                 <div className="space-y-2">
                     {isLoading ? (
-                        <Spinner className="h-10 w-10" color="blue"/> // Loading state
+                        <Spinner style={{width: "20px", height: "20px"}} color="blue"/> // Loading state
                     ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
                         searchResults.map((product) => (
                             <Typography
@@ -251,9 +251,15 @@ const Products = () => {
                         value={customEndDate}
                         onChange={(e) => setCustomEndDate(e.target.value)} // Track custom end date
                     />
-                    <Button onClick={handleApplyDateFilter}>Apply</Button>
+                    <ButtonGroup>
+                        <Button onClick={() => handleIncrementStock(1)}>
+                            +1 stock
+                        </Button>
+                        <Button onClick={() => handleDecrementStock(1)}>
+                            -1 stock
+                        </Button>
+                    </ButtonGroup>
                 </div>
-
                 {/* Furniture Details Table */}
                 <div className="mt-6 flex">
                     {/* Table */}
@@ -294,25 +300,14 @@ const Products = () => {
                 </div>
             </div>
             {/* Modal for larger image */}
-            <Dialog open={isModalOpen} onClose={closeModal}
-                    className="p-6 bg-gray-800 text-white rounded-md flex flex-col">
+            <Dialog open={isModalOpen} onClose={closeModal} className="w-2/3 h-3/3 p-6 bg-gray-800 text-white rounded-md flex flex-col items-center">
                 <img
                     src={`http://localhost:3000/${selectedProduct?.picture}`}
                     alt={selectedProduct?.name}
-                    className="max-w-full max-h-full"
+                    className="max-w-full max-h-full size-fit"
                 />
                 <Button className="mt-4" onClick={closeModal}>Close</Button>
             </Dialog>
-
-            <div className="flex items-center space-x-4 mt-4">
-                <Button color="green" onClick={() => handleIncrementStock(1)}>
-                    Increment
-                </Button>
-                <Button color="red" onClick={() => handleDecrementStock(1)}>
-                    Decrement
-                </Button>
-            </div>
-
             {/* Chart */}
             <div className="mt-6">
                 <Line data={chartData} options={chartOptions}/>

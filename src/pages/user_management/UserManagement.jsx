@@ -54,7 +54,7 @@ const UserManagement = () => {
     };
 
     const handleDeleteCancel = () => {
-        setIsDeleteDialogOpen(false);  // Close the confirmation dialog without deleting
+        setIsDeleteDialogOpen(false);
     };
 
     const handleEditClick = (user) => {
@@ -161,7 +161,7 @@ const UserManagement = () => {
                 {userData.map((user) => (
                     <tr key={user._id} className={user._id % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
                         <td className="p-3">{user.first_name} {user.last_name}</td>
-                        <td className="p-3">{user.createdAt}</td>
+                        <td className="p-3">{user.createdAt.substring(0, 10)}</td>
                         <td className="p-3">{user.email}</td>
                         <td className="p-3 flex items-center">
                             {showPassword[user._id] ? user.password : "••••••••"}

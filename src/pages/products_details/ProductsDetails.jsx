@@ -178,7 +178,7 @@ const ProductsDetails = () => {
                 />
                 <div className="space-y-2">
                     {isLoading ? (
-                        <Spinner className="h-5 w-5" color="blue" />
+                        <Spinner style={{width: "20px", height: "20px"}} color="blue" />
                     ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
                         searchResults.map((product) => (
                             <Typography
@@ -209,7 +209,6 @@ const ProductsDetails = () => {
                         value={customEndDate}
                         onChange={(e) => setCustomEndDate(e.target.value)}
                     />
-                    <Button onClick={handleApplyDateFilter}>Apply</Button>
                 </div>
 
                 <div className="mt-6 flex">
@@ -250,11 +249,11 @@ const ProductsDetails = () => {
             </div>
 
             {/* Modal for larger image */}
-            <Dialog open={isModalOpen} onClose={closeModal} className="p-6 bg-gray-800 text-white rounded-md flex flex-col">
+            <Dialog open={isModalOpen} onClose={closeModal} className="w-2/3 h-3/3 p-6 bg-gray-800 text-white rounded-md flex flex-col items-center">
                 <img
                     src={`http://localhost:3000/${selectedProduct?.picture}`}
                     alt={selectedProduct?.name}
-                    className="max-w-full max-h-full"
+                    className="max-w-full max-h-full size-fit"
                 />
                 <Button className="mt-4" onClick={closeModal}>Close</Button>
             </Dialog>
