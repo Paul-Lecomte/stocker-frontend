@@ -1,4 +1,6 @@
 
+![Alt text](/src/assets/stocker_logo.svg) ![Alt text](src/assets/stocker_name.svg)
+
 # Stocker Frontend
 
 The frontend of the Stocker project is a web application built using React.js, styled with Tailwind CSS and Material Tailwind. It allows users to interact with the furniture inventory, view stock movements, and visualize stock data on graphs.
