@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography, Checkbox, Input, Button } from "@material-tailwind/react";
+import { Card, Typography, Input, Button } from "@material-tailwind/react";
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
@@ -31,7 +31,7 @@ const Movement = () => {
 
                     const latestStockQuantity = product.movements.length
                         ? product.movements[0].quantity
-                        : product.quantity; // Use current quantity as fallback
+                        : product.quantity;
 
                     return {
                         id: product._id,
@@ -42,9 +42,39 @@ const Movement = () => {
                     };
                 });
 
+                // Calculate default date range for the last two weeks
+                const now = new Date();
+                const twoWeeksAgo = new Date();
+                twoWeeksAgo.setDate(now.getDate() - 14);
+
+                const defaultStartDate = twoWeeksAgo.toISOString().split('T')[0];
+                const defaultEndDate = now.toISOString().split('T')[0];
+
+                setStartDate(defaultStartDate);
+                setEndDate(defaultEndDate);
                 setProductsData(products);
-                setSelectedProducts(products.map(product => product.id)); // Select all by default
-                setFilteredDataWithDates(products); // Initialize the filtered data
+                setSelectedProducts(products.map(product => product.id));
+
+                // Filter data for the default date range
+                const filteredData = products.map(product => {
+                    const filteredMovements = product.movements.filter(movement => {
+                        const movementDate = new Date(movement.createdAt);
+                        return movementDate >= twoWeeksAgo && movementDate <= now;
+                    });
+
+                    return {
+                        ...product,
+                        movements: filteredMovements,
+                        latestMovementDate: filteredMovements.length
+                            ? new Date(filteredMovements[0].createdAt).toLocaleDateString()
+                            : 'N/A',
+                        latestStockQuantity: filteredMovements.length
+                            ? filteredMovements[0].quantity
+                            : product.latestStockQuantity,
+                    };
+                });
+
+                setFilteredDataWithDates(filteredData);
             } catch (error) {
                 console.error("Error fetching products data:", error);
             } finally {
@@ -54,12 +84,6 @@ const Movement = () => {
 
         fetchProductsData();
     }, []);
-
-    const handleToggleProduct = (id) => {
-        setSelectedProducts((prev) =>
-            prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-        );
-    };
 
     const handleDateChange = (e) => {
         const { name, value } = e.target;
@@ -85,7 +109,7 @@ const Movement = () => {
                 ...product,
                 movements: filteredMovements,
                 latestMovementDate: filteredMovements.length ? new Date(filteredMovements[0].createdAt).toLocaleDateString() : 'N/A',
-                latestStockQuantity: filteredMovements.length ? filteredMovements[0].quantity : product.latestStockQuantity, // Fallback to current quantity
+                latestStockQuantity: filteredMovements.length ? filteredMovements[0].quantity : product.latestStockQuantity,
             };
         });
 
@@ -94,7 +118,6 @@ const Movement = () => {
 
     if (loading) return <p>Loading...</p>;
 
-    // Chart Data
     const chartLabels = filteredDataWithDates[0]?.movements.map(movement => new Date(movement.createdAt).toLocaleDateString()) || ['Current Quantity'];
 
     const chartData = {
@@ -103,7 +126,7 @@ const Movement = () => {
             label: product.name,
             data: product.movements.length
                 ? product.movements.map(movement => movement.quantity)
-                : [product.latestStockQuantity], // Use current quantity if no movements
+                : [product.latestStockQuantity],
             fill: false,
             backgroundColor: `hsl(${index * 70}, 70%, 50%)`,
             borderColor: `hsl(${index * 70}, 70%, 70%)`,
@@ -114,7 +137,6 @@ const Movement = () => {
         <Card className="rounded-none p-6 bg-gray-800 text-white">
             <Typography variant="h6" className="mb-4">Full Inventory</Typography>
 
-            {/* Date Filter */}
             <div className="flex mb-4">
                 <Input
                     type="date"
@@ -139,7 +161,6 @@ const Movement = () => {
 
             <div className="mb-6">
                 <Typography variant="h6" className="mb-2">Inventory Table</Typography>
-                {/* Table wrapper with horizontal and vertical scrolling */}
                 <div className="overflow-x-auto max-h-64">
                     <table className="min-w-full text-left text-sm whitespace-nowrap">
                         <thead>

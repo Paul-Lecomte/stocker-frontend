@@ -2,7 +2,6 @@ import React from 'react';
 import logo from '../../assets/stocker_name.svg';
 import {
     Card,
-    Typography,
     List,
     ListItem,
     ListItemPrefix,
@@ -14,7 +13,7 @@ import {
     InboxIcon,
 } from "@heroicons/react/24/solid";
 import { MdOutlineInventory } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Nav = () => {
     // Get userInfo from localStorage and parse it
@@ -24,6 +23,9 @@ const Nav = () => {
     // Check for the user roles
     const isSuperAdmin = userInfo && userInfo.role === 'superadmin';
     const isAdmin = userInfo && userInfo.role === 'admin';
+
+    // Get the current URL
+    const location = useLocation();
 
     return (
         <Card className="flex items-center w-3/12 h-full fixed top-0 rounded-none text-white"
@@ -36,41 +38,51 @@ const Nav = () => {
                 />
             </div>
             <List className="h-2/3 flex flex-col justify-around">
-                <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
+                <ListItem
+                    className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/" ? "text-blue-500" : "text-white"}`}
+                >
                     <ListItemPrefix>
-                        <PresentationChartBarIcon className="h-7 w-7 text-white"/>
+                        <PresentationChartBarIcon className="h-7 w-7"/>
                     </ListItemPrefix>
-                    <Link to={"/"} className="text-white">Dashboard</Link>
+                    <Link to={"/"}>Dashboard</Link>
                 </ListItem>
                 {/* Conditionally render User Management link based on the user's role */}
                 {isSuperAdmin && (
-                    <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
+                    <ListItem
+                        className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/user-management" ? "text-blue-500" : "text-white"}`}
+                    >
                         <ListItemPrefix>
-                            <UserCircleIcon className="h-7 w-7 text-white"/>
+                            <UserCircleIcon className="h-7 w-7"/>
                         </ListItemPrefix>
-                        <Link to={"/user-management"} className="text-white">User Management</Link>
+                        <Link to={"/user-management"}>User Management</Link>
                     </ListItem>
                 )}
-                <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
+                <ListItem
+                    className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/movement" ? "text-blue-500" : "text-white"}`}
+                >
                     <ListItemPrefix>
-                        <InboxIcon className="h-7 w-7 text-white"/>
+                        <InboxIcon className="h-7 w-7"/>
                     </ListItemPrefix>
-                    <Link to={"/movement"} className="text-white">Movement</Link>
+                    <Link to={"/movement"}>Movement</Link>
                 </ListItem>
-                <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
+                <ListItem
+                    className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/products" ? "text-blue-500" : "text-white"}`}
+                >
                     <ListItemPrefix>
-                        <ShoppingBagIcon className="h-7 w-7 text-white"/>
+                        <ShoppingBagIcon className="h-7 w-7"/>
                     </ListItemPrefix>
-                    <Link to={"/products"} className="text-white">Products</Link>
+                    <Link to={"/products"}>Products</Link>
                 </ListItem>
 
                 {/* Conditionally render Inventory link based on admin or superadmin roles */}
                 {(isSuperAdmin || isAdmin) && (
-                    <ListItem className="text-2xl text-white hover:bg-gray-800 transition-colors duration-200">
+                    <ListItem
+                        className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/inventory" ? "text-blue-500" : "text-white"}`}
+                    >
                         <ListItemPrefix>
-                            <MdOutlineInventory className="h-7 w-7 text-white"/>
+                            <MdOutlineInventory className="h-7 w-7"/>
                         </ListItemPrefix>
-                        <Link to={"/inventory"} className="text-white">Inventory</Link>
+                        <Link to={"/inventory"}>Inventory</Link>
                     </ListItem>
                 )}
             </List>
