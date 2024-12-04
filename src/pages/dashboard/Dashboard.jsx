@@ -5,7 +5,7 @@ import axios from "axios";
 
 const Dashboard = () => {
     const {
-        furnitureCount  = 0,
+        furnitureCount = 0,
         userCount = 0,
         fetchDashboardData,
         furnitureLoading,
@@ -22,13 +22,13 @@ const Dashboard = () => {
         // Fetch Most Sold ProductsDetails
         const fetchMostSold = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/furniture/most-sold',{
+                const response = await axios.get('http://localhost:3000/api/furniture/most-sold', {
                     method: 'get',
                     withCredentials: true
                 });
                 setMostSoldProducts(response.data);
             } catch (error) {
-                console.error("Error fetching most sold products_details", error);
+                console.error("Error fetching most sold products details", error);
             }
         };
 
@@ -41,7 +41,7 @@ const Dashboard = () => {
                 });
                 setHighestPriceProducts(response.data);
             } catch (error) {
-                console.error("Error fetching highest price products_details", error);
+                console.error("Error fetching highest price products details", error);
             }
         };
 
@@ -81,8 +81,8 @@ const Dashboard = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {mostSoldProducts.map(product => (
-                                <tr key={product._id} className="border-t border-gray-600">
+                            {mostSoldProducts.map((product, index) => (
+                                <tr key={product._id} className={`border-t border-gray-600 ${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-700'}`}>
                                     <td className="py-3 px-6 text-sm text-gray-200">{product.name}</td>
                                     <td className="py-3 px-6 text-sm text-gray-200">{product.movement}</td>
                                 </tr>
@@ -104,8 +104,8 @@ const Dashboard = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {highestPriceProducts.map(product => (
-                                <tr key={product._id} className="border-t border-gray-600">
+                            {highestPriceProducts.map((product, index) => (
+                                <tr key={product._id} className={`border-t border-gray-600 ${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-700'}`}>
                                     <td className="py-3 px-6 text-sm text-gray-200">{product.name}</td>
                                     <td className="py-3 px-6 text-sm text-gray-200">${product.price.toFixed(2)}</td>
                                 </tr>

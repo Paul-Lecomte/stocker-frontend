@@ -10,6 +10,7 @@ import ProductsDetails from "./pages/products_details/./ProductsDetails.jsx";
 import Inventory from "./pages/inventory/Inventory.jsx";
 import Login from "./pages/login/Login.jsx";
 import Products from "./pages/products/Products.jsx";
+import StockMovementHistory from "./pages/historic/StockMovementHistory.jsx";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
               <Route path="products" element={<Products />} />
               <Route path="products_details/:id" element={<ProductsDetails />} />
               <Route path="inventory" element={<Inventory />} />
+              <Route path="stock_movement_history" element={<StockMovementHistory />} />
               <Route path="*" element={<ErrorPage />} />
           </Route>
       </Routes>

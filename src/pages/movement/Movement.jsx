@@ -167,13 +167,15 @@ const Movement = () => {
                         <tr className="bg-gray-700">
                             <th className="p-3">Name</th>
                             <th className="p-3">Latest Movement Date</th>
+                            <th className="p-3">Current Stock Quantity</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {filteredDataWithDates.map((product) => (
-                            <tr key={product.id} className="bg-gray-700">
+                        {filteredDataWithDates.map((product, index) => (
+                            <tr key={product.id} className={index % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
                                 <td className="p-3">{product.name}</td>
                                 <td className="p-3">{product.latestMovementDate}</td>
+                                <td className="p-3">{product.latestStockQuantity}</td>
                             </tr>
                         ))}
                         </tbody>
@@ -187,17 +189,17 @@ const Movement = () => {
                 options={{
                     responsive: true,
                     plugins: {
-                        legend: { position: 'top', labels: { color: 'white' } },
-                        title: { display: true, color: 'white', text: 'Stock Levels of Selected Products' },
+                        legend: {position: 'top', labels: {color: 'white'}},
+                        title: {display: true, color: 'white', text: 'Stock Levels of Selected Products'},
                     },
                     scales: {
                         x: {
-                            ticks: { color: 'white' },
-                            grid: { color: 'rgba(255, 255, 255, 0.2)' }
+                            ticks: {color: 'white'},
+                            grid: {color: 'rgba(255, 255, 255, 0.2)'}
                         },
                         y: {
-                            ticks: { color: 'white' },
-                            grid: { color: 'rgba(255, 255, 255, 0.2)' }
+                            ticks: {color: 'white'},
+                            grid: {color: 'rgba(255, 255, 255, 0.2)'}
                         }
                     }
                 }}

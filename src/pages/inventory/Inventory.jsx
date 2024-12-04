@@ -44,6 +44,11 @@ const Inventory = () => {
         fetchAisles();
     }, []);
 
+    // Fetch username from local storage
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const { first_name, last_name } = userInfo ? userInfo.user : {};
+    const username = `${first_name} ${last_name}`.trim();
+
     // Handle aisle addition
     const handleAddAisle = async () => {
         try {
@@ -137,7 +142,8 @@ const Inventory = () => {
             formData.append("price", editData.price);
             formData.append("description", editData.description);
             formData.append("location", editData.location);
-            if (picture) formData.append("picture", picture); // Append picture if provided
+            formData.append("modifiedBy", username);
+            if (picture) formData.append("picture", picture);
 
             const url = isAddMode ?
                 'http://localhost:3000/api/furniture/create' :
@@ -191,8 +197,8 @@ const Inventory = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {inventoryData.map((item) => (
-                    <tr key={item._id} className={item._id % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
+                {inventoryData.map((item, index) => (
+                    <tr key={item._id} className={index % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
                         <td className="p-3">{item.name}</td>
                         <td className="p-3">{item.quantity}</td>
                         <td className="p-3">{item.location}</td>
@@ -224,15 +230,12 @@ const Inventory = () => {
                         />
                         <Button color="green" onClick={handleAddAisle}>Add Aisle</Button>
 
-                        <Typography variant="h6" className="mt-6">Existing Aisles</Typography>
-                        <ul className="list-disc ml-4">
+                        <Typography variant="h6" className="mt-4">Existing Aisles:</Typography>
+                        <ul>
                             {aisles.map((aisle) => (
-                                <li key={aisle._id} className="flex justify-between items-center">
-                                    <span>{aisle.location}</span>
-                                    <Button
-                                        size="sm"
-                                        color="red"
-                                        onClick={() => handleDeleteAisle(aisle._id)}>
+                                <li key={aisle._id} className="flex justify-between">
+                                    {aisle.location}
+                                    <Button color="red" size="sm" onClick={() => handleDeleteAisle(aisle._id)}>
                                         Delete
                                     </Button>
                                 </li>
@@ -241,37 +244,55 @@ const Inventory = () => {
                     </div>
                 </DialogBody>
                 <DialogFooter>
-                    <Button color="gray" onClick={() => setIsAisleDialogOpen(false)}>Close</Button>
+                    <Button onClick={() => setIsAisleDialogOpen(false)} color="red">Cancel</Button>
                 </DialogFooter>
             </Dialog>
 
-            {/* Inventory Item Edit/Add Dialog */}
+            {/* Edit/Add Item Dialog */}
             <Dialog open={isDialogOpen} handler={() => setIsDialogOpen(!isDialogOpen)}>
                 <DialogBody>
-                    <Typography variant="h6">{isAddMode ? "Add" : "Edit"} Item</Typography>
+                    <Typography variant="h6">{isAddMode ? "Add New Item" : "Edit Item"}</Typography>
                     <div className="flex flex-col gap-4 mt-4">
-                        <Input label="Name" name="name" value={editData.name} onChange={handleEditChange} />
-                        <Input label="Quantity" name="quantity" type="number" value={editData.quantity} onChange={handleEditChange} />
-                        <Input label="Price" name="price" value={editData.price} onChange={handleEditChange} />
-                        <Input label="Description" name="description" value={editData.description} onChange={handleEditChange} />
-
-                        {/* Location select dropdown */}
-                        <Select label="Location" name="location" value={editData.location} onChange={handleLocationChange}>
+                        <Input
+                            label="Name"
+                            name="name"
+                            value={editData.name}
+                            onChange={handleEditChange}
+                        />
+                        <Input
+                            label="Quantity"
+                            name="quantity"
+                            type="number"
+                            value={editData.quantity}
+                            onChange={handleEditChange}
+                        />
+                        <Input
+                            label="Price"
+                            name="price"
+                            type="number"
+                            value={editData.price}
+                            onChange={handleEditChange}
+                        />
+                        <Input
+                            label="Description"
+                            name="description"
+                            value={editData.description}
+                            onChange={handleEditChange}
+                        />
+                        <Select label="Location" value={editData.location} onChange={handleLocationChange}>
                             {aisles.map((aisle) => (
-                                <Option key={aisle._id} value={aisle.location}>{aisle.location}</Option>
+                                <Option key={aisle._id} value={aisle.location}>
+                                    {aisle.location}
+                                </Option>
                             ))}
                         </Select>
-
-                        {/* New File Input for Picture */}
-                        <Input label="Picture" type="file" onChange={handlePictureChange} />
+                        <input type="file" onChange={handlePictureChange} />
                     </div>
                 </DialogBody>
                 <DialogFooter>
-                    <Button color="blue" onClick={handleSave}>
-                        {isAddMode ? "Add" : "Save"}
-                    </Button>
-                    <Button color="gray" onClick={() => setIsDialogOpen(false)}>
-                        Cancel
+                    <Button onClick={() => setIsDialogOpen(false)} color="red">Cancel</Button>
+                    <Button onClick={handleSave} color="green">
+                        Save
                     </Button>
                 </DialogFooter>
             </Dialog>

@@ -148,7 +148,7 @@ const UserManagement = () => {
             </div>
             <table className="min-w-full text-left text-sm">
                 <thead>
-                <tr className="bg-gray-600">
+                <tr className="bg-gray-700">
                     <th className="p-3">Name</th>
                     <th className="p-3">Date</th>
                     <th className="p-3">Email</th>
@@ -158,8 +158,8 @@ const UserManagement = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {userData.map((user) => (
-                    <tr key={user._id} className={user._id % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
+                {userData.map((user, index) => (
+                    <tr key={user._id} className={index % 2 === 0 ? "bg-gray-600" : "bg-gray-700"}>
                         <td className="p-3">{user.first_name} {user.last_name}</td>
                         <td className="p-3">{user.createdAt.substring(0, 10)}</td>
                         <td className="p-3">{user.email}</td>

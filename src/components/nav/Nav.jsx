@@ -76,14 +76,26 @@ const Nav = () => {
 
                 {/* Conditionally render Inventory link based on admin or superadmin roles */}
                 {(isSuperAdmin || isAdmin) && (
-                    <ListItem
-                        className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/inventory" ? "text-blue-500" : "text-white"}`}
-                    >
-                        <ListItemPrefix>
-                            <MdOutlineInventory className="h-7 w-7"/>
-                        </ListItemPrefix>
-                        <Link to={"/inventory"}>Inventory</Link>
-                    </ListItem>
+                    <>
+                        <ListItem
+                            className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/inventory" ? "text-blue-500" : "text-white"}`}
+                        >
+                            <ListItemPrefix>
+                                <MdOutlineInventory className="h-7 w-7"/>
+                            </ListItemPrefix>
+                            <Link to={"/inventory"}>Inventory</Link>
+                        </ListItem>
+
+                        {/* New Stock Movement History link for admin only */}
+                        <ListItem
+                            className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/stock_movement_history" ? "text-blue-500" : "text-white"}`}
+                        >
+                            <ListItemPrefix>
+                                <ShoppingBagIcon className="h-7 w-7"/>
+                            </ListItemPrefix>
+                            <Link to={"/stock_movement_history"}>Stock Movement History</Link>
+                        </ListItem>
+                    </>
                 )}
             </List>
         </Card>
