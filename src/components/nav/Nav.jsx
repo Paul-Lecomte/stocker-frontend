@@ -39,7 +39,7 @@ const Nav = () => {
             </div>
             <List className="h-2/3 flex flex-col justify-around">
                 <ListItem
-                    className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/" ? "text-blue-500" : "text-white"}`}
+                    className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/" ? "text-blue-500" : "text-white"}`}
                 >
                     <ListItemPrefix>
                         <PresentationChartBarIcon className="h-7 w-7"/>
@@ -49,7 +49,7 @@ const Nav = () => {
                 {/* Conditionally render User Management link based on the user's role */}
                 {isSuperAdmin && (
                     <ListItem
-                        className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/user-management" ? "text-blue-500" : "text-white"}`}
+                        className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/user-management" ? "text-blue-500" : "text-white"}`}
                     >
                         <ListItemPrefix>
                             <UserCircleIcon className="h-7 w-7"/>
@@ -58,7 +58,7 @@ const Nav = () => {
                     </ListItem>
                 )}
                 <ListItem
-                    className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/movement" ? "text-blue-500" : "text-white"}`}
+                    className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/movement" ? "text-blue-500" : "text-white"}`}
                 >
                     <ListItemPrefix>
                         <InboxIcon className="h-7 w-7"/>
@@ -66,7 +66,7 @@ const Nav = () => {
                     <Link to={"/movement"}>Movement</Link>
                 </ListItem>
                 <ListItem
-                    className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/products" ? "text-blue-500" : "text-white"}`}
+                    className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/products" ? "text-blue-500" : "text-white"}`}
                 >
                     <ListItemPrefix>
                         <ShoppingBagIcon className="h-7 w-7"/>
@@ -78,7 +78,7 @@ const Nav = () => {
                 {(isSuperAdmin || isAdmin) && (
                     <>
                         <ListItem
-                            className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/inventory" ? "text-blue-500" : "text-white"}`}
+                            className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/inventory" ? "text-blue-500" : "text-white"}`}
                         >
                             <ListItemPrefix>
                                 <MdOutlineInventory className="h-7 w-7"/>
@@ -88,7 +88,7 @@ const Nav = () => {
 
                         {/* New Stock Movement History link for admin only */}
                         <ListItem
-                            className={`text-2xl hover:bg-gray-800 transition-colors duration-200 ${location.pathname === "/stock_movement_history" ? "text-blue-500" : "text-white"}`}
+                            className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/stock_movement_history" ? "text-blue-500" : "text-white"}`}
                         >
                             <ListItemPrefix>
                                 <ShoppingBagIcon className="h-7 w-7"/>
