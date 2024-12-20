@@ -33,15 +33,20 @@ The frontend of the Stocker project is a web application built using React.js, s
 4. Create a `.env` file in the root directory and configure the following variables:
    - `REACT_APP_API_URL`: The URL of the backend server
 
+
+5. You can find the backend here:
+   [Stocker Backend Repository](https://github.com/Paul-Lecomte/stocker-backend)
+
+
 ## Configuration
 
 To run the frontend app locally:
 
 ```bash
-npm start
+npm run dev
 ```
 
-This will start the frontend in development mode on [http://localhost:3000](http://localhost:3000).
+This will start the frontend in development mode on [http://localhost:5173](http://localhost:5173).
 
 ## Running the App
 

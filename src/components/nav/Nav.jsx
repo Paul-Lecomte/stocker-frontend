@@ -46,17 +46,6 @@ const Nav = () => {
                     </ListItemPrefix>
                     <Link to={"/"}>Dashboard</Link>
                 </ListItem>
-                {/* Conditionally render User Management link based on the user's role */}
-                {isSuperAdmin && (
-                    <ListItem
-                        className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/user-management" ? "text-blue-500" : "text-white"}`}
-                    >
-                        <ListItemPrefix>
-                            <UserCircleIcon className="h-7 w-7"/>
-                        </ListItemPrefix>
-                        <Link to={"/user-management"}>User Management</Link>
-                    </ListItem>
-                )}
                 <ListItem
                     className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/movement" ? "text-blue-500" : "text-white"}`}
                 >
@@ -96,6 +85,17 @@ const Nav = () => {
                             <Link to={"/stock_movement_history"}>Stock Movement History</Link>
                         </ListItem>
                     </>
+                )}
+                {/* Conditionally render User Management link based on the user's role */}
+                {isSuperAdmin && (
+                    <ListItem
+                        className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/user-management" ? "text-blue-500" : "text-white"}`}
+                    >
+                        <ListItemPrefix>
+                            <UserCircleIcon className="h-7 w-7"/>
+                        </ListItemPrefix>
+                        <Link to={"/user-management"}>User Management</Link>
+                    </ListItem>
                 )}
             </List>
         </Card>
