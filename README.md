@@ -1,65 +1,125 @@
 
-![Alt text](/src/assets/stocker_logo.svg) ![Alt text](src/assets/stocker_name.svg)
+❗Work In Progress❗
+
+![logo](src/assets/stocker_logo.svg)
+![logo](src/assets/stocker_name.svg)
 
 # Stocker Frontend
 
-The frontend of the Stocker project is a web application built using React.js, styled with Tailwind CSS and Material Tailwind. It allows users to interact with the furniture inventory, view stock movements, and visualize stock data on graphs.
+## About the project
+Stocker is an inventory management system that allows users to track the stock of furniture items, monitor stock movements, and analyze stock levels through visualizations.
 
-## Table of Contents
+The backend is built with Node.js, and the frontend is built using React.js and Material Tailwind.
 
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the App](#running-the-app)
-- [Features](#features)
-- [Contributing](#contributing)
+## Table of contents
+* [Stocker Frontend](#stocker-frontend)
+   * [About the project](#about-the-project)
+   * [Table of contents](#table-of-contents)
+   * [TODO](#todo)
+   * [Installation](#installation)
+      * [Clone the repo](#clone-the-repo)
+         * [Backend](#backend)
+         * [Frontend](#frontend)
+      * [Using the install script](#using-the-install-script)
+   * [Usage](#usage)
+      * [Example](#example)
+   * [Development usage](#development-usage)
+      * [Backend](#backend-1)
+      * [Frontend](#frontend-1)
+         * [USAGE](#usage-1)
+            * [Example](#example-1)
+
+## TODO
+Things done and not yet done:
+- Backend
+   - Stock Management
+      - [x] Create, Read, Update, Delete furniture items
+      - [x] Track stock movements (IN/OUT)
+      - [x] Fetch stock movements by product
+   - User Management
+      - [x] Authentication with JWT
+      - [x] User roles and access control
+- Frontend
+   - Stock Overview
+      - [x] View all furniture items and their details
+   - Stock Movement Tracking
+      - [x] Display stock movements on a graph
+   - Dashboard
+      - [x] Show stock levels and product information
+   - Notifications
+      - [ ] Notification system for stock changes
 
 ## Installation
-
-1. Clone this repository to your local machine:
-   ```bash
-   git clone https://github.com/Paul-Lecomte/stocker-frontend.git
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd stocker-frontend
-   ```
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Create a `.env` file in the root directory and configure the following variables:
-   - `REACT_APP_API_URL`: The URL of the backend server
-
-
-5. You can find the backend here:
-   [Stocker Backend Repository](https://github.com/Paul-Lecomte/stocker-backend)
-
-
-## Configuration
-
-To run the frontend app locally:
-
+### Clone the repo
+Clone the repository to your local machine.
 ```bash
+git clone https://github.com/Paul-Lecomte/stocker-frontend.git
+cd stocker-frontend
+```
+
+#### Backend
+Navigate to the backend folder and install the dependencies.
+```bash
+cd backend
+npm install
 npm run dev
 ```
 
-This will start the frontend in development mode on [http://localhost:5173](http://localhost:5173).
+#### Frontend
+For the frontend, navigate to the frontend folder and install the dependencies.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Running the App
+### Using the install script
+You can also use the install script to set up both the backend and frontend environment.
 
-1. The app displays a dashboard showing user and furniture information.
-2. Users can view and update furniture details, track stock movements, and see charts displaying stock levels over time.
-3. The app interacts with the backend APIs to fetch and send data about furniture, stock movements, and user authentication.
+Download the [install.sh](./install.sh) script and run it in the project folder.
 
-## Features
+## Usage
+To use the project, you'll need some environment variables. Create a `.env` file in the backend folder and add the following variables:
+```env
+PORT
+NODE_ENV
+DATABASE_URI
+JWT_SECRET
+```
 
-- **Furniture Overview**: View all furniture items, including name, quantity, price, and movement history.
-- **Stock Movement Graph**: Visualize stock movements using Chart.js for better analysis.
-- **Authentication**: Users can register, log in, and access the dashboard with role-based access control.
+### Example
+```env
+PORT=3000
+NODE_ENV=dev
+DATABASE_URI=mongodb://localhost:27017/stocker
+JWT_SECRET=mysecret
+```
 
-## Contributing
+## Development usage
+### Backend
+Navigate to the backend folder and run the server.
+```bash
+cd backend
+npm run start
+```
 
-Contributions are welcome! To contribute, please fork this repository, create a new branch, and submit a pull request with your changes.
+### Frontend
+Navigate to the frontend folder and start the React app.
+```bash
+cd frontend
+npm run start
+```
+
+#### USAGE
+To use the frontend, you'll need to set the following environment variables in the `.env` file in the frontend folder:
+```env
+VITE_API_URL
+VITE_IMG_URL
+```
+
+##### Example
+```env
+VITE_API_URL=http://localhost:3000/api/
+VITE_IMG_URL=http://localhost:3000/images/
+```
+
