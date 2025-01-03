@@ -11,6 +11,7 @@ import Inventory from "./pages/inventory/Inventory.jsx";
 import Login from "./pages/login/Login.jsx";
 import Products from "./pages/products/Products.jsx";
 import StockMovementHistory from "./pages/historic/StockMovementHistory.jsx";
+import NotificationsComp from "./pages/notification/NotificationPage.jsx";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
               <Route path="products_details/:id" element={<ProductsDetails />} />
               <Route path="inventory" element={<Inventory />} />
               <Route path="stock_movement_history" element={<StockMovementHistory />} />
+              <Route path="notifications" element={<NotificationsComp />} />
               <Route path="*" element={<ErrorPage />} />
           </Route>
       </Routes>

@@ -97,6 +97,16 @@ const Nav = () => {
                         <Link to={"/user-management"}>User Management</Link>
                     </ListItem>
                 )}
+
+                {/* Notifications link */}
+                <ListItem
+                    className={`text-2xl hover:bg-gray-200 transition-colors duration-200 ${location.pathname === "/notifications" ? "text-blue-500" : "text-white"}`}
+                >
+                    <ListItemPrefix>
+                        <InboxIcon className="h-7 w-7" />
+                    </ListItemPrefix>
+                    <Link to={"/notifications"}>Notifications</Link>
+                </ListItem>
             </List>
         </Card>
     );
