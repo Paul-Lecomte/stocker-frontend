@@ -12,13 +12,12 @@ import {
 const NotificationsComp = () => {
     const [notifications, setNotifications] = useState([]);
     const [newNotification, setNewNotification] = useState({
+        name: '',
         furnitureId: '',
         threshold: '',
         comparison: 'LESS_THAN',
     });
     const [activeTab, setActiveTab] = useState('created');
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedNotificationId, setSelectedNotificationId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredFurniture, setFilteredFurniture] = useState([]);
     const [furnitureName, setFurnitureName] = useState('');
@@ -27,7 +26,6 @@ const NotificationsComp = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                // Retrieve userId from localStorage
                 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
                 const userId = userInfo?.user?._id;
 
@@ -36,14 +34,18 @@ const NotificationsComp = () => {
                     return;
                 }
 
-                console.log("Fetching notifications for user:", userId);
                 const response = await axios.get(`http://localhost:3000/api/notifications/user/${userId}`, {
                     withCredentials: true,
                 });
-                setNotifications(response.data.notifications || []);
-                console.log("Fetched notifications:", response.data.notifications);
+
+                if (response.data.length > 0) {
+                    setNotifications(response.data);
+                } else {
+                    setNotifications([]);
+                }
             } catch (error) {
-                console.error("Failed to fetch notifications:", error);
+                console.error('Error fetching notifications:', error);
+                setNotifications([]); // Ensure the state is cleared if there's an error
             }
         };
 
@@ -56,7 +58,6 @@ const NotificationsComp = () => {
             ...prev,
             [name]: value,
         }));
-        console.log(`Updated ${name}:`, value);
     };
 
     // Handle search input change
@@ -64,26 +65,22 @@ const NotificationsComp = () => {
         const query = e.target.value;
         setSearchQuery(query);
         filterFurniture(query);
-        console.log("Search query updated:", query);
     };
 
     // Fetch and filter furniture based on search query
     const filterFurniture = async (query) => {
         if (query) {
             try {
-                console.log("Searching furniture with query:", query);
                 const response = await axios.get('http://localhost:3000/api/furniture/search', {
                     params: { name: query },
                     withCredentials: true,
                 });
                 setFilteredFurniture(response.data);
-                console.log("Filtered furniture:", response.data);
             } catch (error) {
                 console.error('Failed to search furniture:', error);
             }
         } else {
             setFilteredFurniture([]);
-            console.log("No search query, clearing filtered furniture.");
         }
     };
 
@@ -96,21 +93,16 @@ const NotificationsComp = () => {
         setFurnitureName(furniture.name);
         setSearchQuery('');
         setFilteredFurniture([]);
-        console.log("Selected furniture:", furniture);
     };
 
     // Create a new notification
     const handleCreateNotification = async () => {
-        // Convert threshold to number before sending to backend
         const notificationData = {
             ...newNotification,
             threshold: Number(newNotification.threshold), // Convert to number
         };
 
-        console.log("Creating notification with data:", notificationData);
-
         try {
-            // Retrieve userId from localStorage for the notification
             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
             const userId = userInfo?.user?._id;
 
@@ -121,26 +113,24 @@ const NotificationsComp = () => {
 
             const response = await axios.post('http://localhost:3000/api/notifications', {
                 ...notificationData,
-                userId: userId, // Send userId with notification data
+                userId: userId,
             }, {
                 withCredentials: true,
             });
             setNotifications((prev) => [...prev, response.data.notification]);
-            setNewNotification({ furnitureId: '', threshold: '', comparison: 'LESS_THAN' });
+            setNewNotification({ name: '', furnitureId: '', threshold: '', comparison: 'LESS_THAN' });
 
             // Trigger a browser notification
             if (window.Notification && Notification.permission === "granted") {
                 new window.Notification("New notification created!", {
                     body: `Furniture ID: ${notificationData.furnitureId} - Threshold: ${notificationData.threshold}`,
                 });
-                console.log("Browser notification triggered.");
             } else if (Notification.permission !== "denied") {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
                         new window.Notification("New notification created!", {
                             body: `Furniture ID: ${notificationData.furnitureId} - Threshold: ${notificationData.threshold}`,
                         });
-                        console.log("Browser notification triggered after permission.");
                     }
                 });
             }
@@ -151,13 +141,11 @@ const NotificationsComp = () => {
 
     // Delete a notification
     const handleDeleteNotification = async (id) => {
-        console.log("Deleting notification with ID:", id);
         try {
             await axios.delete(`http://localhost:3000/api/notifications/${id}`, {
                 withCredentials: true,
             });
             setNotifications((prev) => prev.filter((n) => n._id !== id));
-            console.log("Notification deleted successfully.");
         } catch (error) {
             console.error('Failed to delete notification:', error);
         }
@@ -223,6 +211,17 @@ const NotificationsComp = () => {
 
                     <Input
                         type="text"
+                        label="Notification Name"
+                        name="name"
+                        value={newNotification.name}
+                        onChange={e => handleInputChange(e.target.value, 'name')}
+                        required
+                        color="blue-gray"
+                        className="text-white bg-gray-800 border border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+                    />
+
+                    <Input
+                        type="text"
                         label="Threshold"
                         name="threshold"
                         value={newNotification.threshold}
@@ -231,7 +230,6 @@ const NotificationsComp = () => {
                         color="blue-gray"
                         className="text-white bg-gray-800 border border-gray-600 focus:ring-blue-500 focus:border-blue-500"
                         onInput={(e) => {
-                            // Restrict input to numbers only (no special characters)
                             e.target.value = e.target.value.replace(/[^0-9]/g, '');
                         }}
                     />
@@ -240,36 +238,44 @@ const NotificationsComp = () => {
                         label="Comparison"
                         name="comparison"
                         value={newNotification.comparison}
-                        onChange={(value) => handleInputChange(value, 'comparison')} // Directly pass value and name
+                        onChange={(value) => handleInputChange(value, 'comparison')}
                         color="blue-gray"
                         className="text-white border"
                     >
                         <Option value="LESS_THAN">Less Than</Option>
                         <Option value="GREATER_THAN">Greater Than</Option>
                     </Select>
-                    <Button onClick={handleCreateNotification} className="w-full py-3 text-lg bg-blue-500 hover:bg-blue-600">
+
+                    <Button
+                        onClick={handleCreateNotification}
+                        color="blue"
+                        className="w-full mt-6"
+                    >
                         Create Notification
                     </Button>
                 </form>
             </Card>
 
-            {activeTab === 'created' && (
-                <div>
-                    {filteredNotifications.map((notification) => (
-                        <Card key={notification._id} className="mb-6 p-4 bg-gray-700 rounded-md">
-                            <Typography variant="h6" className="text-white">
-                                Furniture: {notification.furnitureId} | Threshold: {notification.threshold}
-                            </Typography>
+            <div className="overflow-y-auto max-h-96">
+                {filteredNotifications.map((notification) => (
+                    <Card key={notification._id} className="p-4 mb-4 bg-gray-700">
+                        <div className="flex justify-between items-center">
+                            <div className="flex flex-col">
+                                <Typography variant="h6" className="text-white">{notification.name}</Typography>
+                                <Typography variant="paragraph" className="text-white">{`Furniture Name: ${notification.furnitureId.name}`}</Typography>
+                                <Typography variant="paragraph" className="text-white">{`Threshold: ${notification.threshold} ${notification.comparison === 'LESS_THAN' ? 'Less Than' : 'Greater Than'}`}</Typography>
+                            </div>
                             <Button
                                 onClick={() => handleDeleteNotification(notification._id)}
-                                className="mt-4 bg-red-500 hover:bg-red-600"
+                                color="red"
+                                className="ml-4"
                             >
                                 Delete
                             </Button>
-                        </Card>
-                    ))}
-                </div>
-            )}
+                        </div>
+                    </Card>
+                ))}
+            </div>
         </Card>
     );
 };
