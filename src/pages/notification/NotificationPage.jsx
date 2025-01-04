@@ -153,9 +153,13 @@ const NotificationsComp = () => {
 
     // Filter notifications based on their activation status
     const filteredNotifications = (notifications || []).filter((notification) => {
-        return activeTab === 'created'
-            ? !notification.isActivated
-            : notification.isActivated;
+        if (activeTab === 'created') {
+            // Show notifications that are not activated
+            return !notification.isActivated;
+        } else {
+            // Show notifications that are activated or triggered
+            return notification.isActivated || notification.isTriggered;
+        }
     });
 
     return (
