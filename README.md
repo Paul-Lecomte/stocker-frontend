@@ -47,7 +47,8 @@ Things done and not yet done:
    - Dashboard
       - [x] Show stock levels and product information
    - Notifications
-      - [ ] Notification system for stock changes
+      - [x] Notification system for stock changes
+      - [ ] Popup for the notifications
 
 ## Installation
 ### Clone the repo
