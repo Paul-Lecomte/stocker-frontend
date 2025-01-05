@@ -119,21 +119,6 @@ const NotificationsComp = () => {
             });
             setNotifications((prev) => [...prev, response.data.notification]);
             setNewNotification({ name: '', furnitureId: '', threshold: '', comparison: 'LESS_THAN' });
-
-            // Trigger a browser notification
-            if (window.Notification && Notification.permission === "granted") {
-                new window.Notification("New notification created!", {
-                    body: `Furniture ID: ${notificationData.furnitureId} - Threshold: ${notificationData.threshold}`,
-                });
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        new window.Notification("New notification created!", {
-                            body: `Furniture ID: ${notificationData.furnitureId} - Threshold: ${notificationData.threshold}`,
-                        });
-                    }
-                });
-            }
         } catch (error) {
             console.error('Failed to create notification:', error);
         }
