@@ -63,7 +63,7 @@ export const NotificationProvider = ({ children }) => {
     return (
         <NotificationContext.Provider value={{ addPopupNotification: setPopupNotifications }}>
             {children}
-            <div className="fixed top-4 right-4 space-y-2">
+            <div className="fixed top-4 right-4 space-y-2 z-50">
                 {popupNotifications.map((popup) => (
                     <div key={popup.id} className="p-4 bg-blue-500 text-white rounded shadow-lg">
                         {popup.message}
