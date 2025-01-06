@@ -82,6 +82,7 @@ const Products = () => {
                     new Date(movement.createdAt) >= startDate && new Date(movement.createdAt) <= endDate
             );
         } else {
+            //I am keeping these just incase i want to add a set time period filter
             switch (timePeriod) {
                 case "Last 30 days":
                     filtered = filtered.filter(
