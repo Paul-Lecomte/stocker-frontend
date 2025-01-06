@@ -18,6 +18,7 @@ function App() {
     const navigate = useNavigate();
 
     return (
+        //notification provider is here to be able to be shown sitewide
         <NotificationProvider>
             <Routes>
                 <Route path="login" element={<Login />} />
