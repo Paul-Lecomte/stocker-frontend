@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AvatarWithUserDropdown } from "../Avatar/Avatar.jsx"; // Remplace par le bon chemin d'importation
+import { AvatarWithUserDropdown } from "../Avatar/Avatar.jsx";
 import { format } from "date-fns";
 
 const Header = () => {

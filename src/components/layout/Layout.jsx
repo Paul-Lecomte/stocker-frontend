@@ -14,7 +14,7 @@ const Layout = () => {
 
         // If userInfo doesn't exist or is empty, redirect to login page
         if (!userInfoFromStorage || userInfoFromStorage === '') {
-            navigate('/login');  // Redirect to login if not logged in or if userInfo is empty
+            navigate('/login');
         }
     }, [navigate]);  // Only rerun this effect when navigate changes
 
