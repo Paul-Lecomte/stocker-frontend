@@ -21,10 +21,10 @@ export const NotificationProvider = ({ children }) => {
 
         socket.on('stock-level-notification', (data) => {
             console.log('Notification triggered:', data);
-            const { message, furnitureId, threshold } = data;
+            const { message, furnitureId, furnitureName ,threshold } = data;
 
             const notificationMessage = furnitureId
-                ? `Product ${furnitureId} has reached the threshold of ${threshold}. ${message}`
+                ? `Product ${furnitureName} has reached the threshold of ${threshold}. ${message}`
                 : message;
 
             const newNotification = {
