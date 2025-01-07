@@ -9,7 +9,7 @@ const Inventory = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
     const [editData, setEditData] = useState({ name: '', quantity: '', price: '', description: '', location: '' });
-    const [picture, setPicture] = useState(null); // New state for the picture file
+    const [picture, setPicture] = useState(null);
     const [isAisleDialogOpen, setIsAisleDialogOpen] = useState(false);
     const [aisleLocation, setAisleLocation] = useState('');
     const navigate = useNavigate();

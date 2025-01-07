@@ -244,7 +244,7 @@ const Products = () => {
                             </Typography>
                         ))
                     ) : (
-                        <span>No results found</span> // Show a message if no results
+                        <span>No results found</span>
                     )}
                 </div>
 
@@ -255,14 +255,14 @@ const Products = () => {
                         color="white"
                         label="Start Date"
                         value={customStartDate}
-                        onChange={(e) => setCustomStartDate(e.target.value)} // Track custom start date
+                        onChange={(e) => setCustomStartDate(e.target.value)}
                     />
                     <Input
                         type="date"
                         color="white"
                         label="End Date"
                         value={customEndDate}
-                        onChange={(e) => setCustomEndDate(e.target.value)} // Track custom end date
+                        onChange={(e) => setCustomEndDate(e.target.value)}
                     />
                     <ButtonGroup>
                         <Button onClick={() => handleIncrementStock(1)}>

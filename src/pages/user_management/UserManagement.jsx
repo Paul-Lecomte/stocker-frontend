@@ -32,8 +32,8 @@ const UserManagement = () => {
     }, []);  // Empty dependency array ensures it runs only once on component mount
 
     const handleDeleteClick = (id) => {
-        setDeleteUserId(id);  // Set the ID of the user to be deleted
-        setIsDeleteDialogOpen(true);  // Open the confirmation dialog
+        setDeleteUserId(id);
+        setIsDeleteDialogOpen(true);
     };
 
     const handleDeleteConfirm = async () => {

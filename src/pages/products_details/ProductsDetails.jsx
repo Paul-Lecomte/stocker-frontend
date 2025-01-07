@@ -1,7 +1,7 @@
 import { Line } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Input, Select, Typography, Button, Spinner, Dialog } from "@material-tailwind/react"; // Import Dialog
+import { Card, Input, Select, Typography, Button, Spinner, Dialog } from "@material-tailwind/react";
 import axios from "axios";
 import debounce from "lodash/debounce";
 
