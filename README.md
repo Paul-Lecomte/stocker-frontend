@@ -49,7 +49,7 @@ Things done and not yet done:
    - Notifications
       - [x] Notification system for stock changes
       - [x] Popup for the notifications
-      - [ ] Popup for the notifications on the browser
+      - [x] Popup for the notifications on the browser
 
 ## Installation
 ### Clone the repo
