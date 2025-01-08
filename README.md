@@ -48,7 +48,8 @@ Things done and not yet done:
       - [x] Show stock levels and product information
    - Notifications
       - [x] Notification system for stock changes
-      - [ ] Popup for the notifications
+      - [x] Popup for the notifications
+      - [ ] Popup for the notifications on the browser
 
 ## Installation
 ### Clone the repo
