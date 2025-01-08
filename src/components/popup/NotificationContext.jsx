@@ -10,6 +10,15 @@ export const NotificationProvider = ({ children }) => {
     const [popupNotifications, setPopupNotifications] = useState([]);
     const notificationsRef = useRef(popupNotifications);
 
+    // Request browser notification permission on load
+    useEffect(() => {
+        if (Notification.permission === 'default') {
+            Notification.requestPermission().catch((err) => {
+                console.error('Failed to request notification permission:', err);
+            });
+        }
+    }, []);
+
     useEffect(() => {
         socket.on('connect', () => {
             console.log('Frontend connected to Socket.IO server');
@@ -20,8 +29,7 @@ export const NotificationProvider = ({ children }) => {
         });
 
         socket.on('stock-level-notification', (data) => {
-            console.log('Notification triggered:', data);
-            const { message, furnitureId, furnitureName ,threshold } = data;
+            const { message, furnitureId, furnitureName, threshold } = data;
 
             const notificationMessage = furnitureId
                 ? `Product ${furnitureName} has reached the threshold of ${threshold}. ${message}`
@@ -32,13 +40,29 @@ export const NotificationProvider = ({ children }) => {
                 message: notificationMessage,
             };
 
+            // Add popup notification
             setPopupNotifications((prev) => {
                 const newNotifications = [...prev, newNotification];
                 notificationsRef.current = newNotifications; // Update ref with new notifications
                 return newNotifications;
             });
 
-            // Automatically remove notification after 5 seconds
+            // Show browser notification if permission is granted
+            if (Notification.permission === 'granted') {
+                const browserNotification = new Notification('Stocker Alert', {
+                    body: notificationMessage,
+                    icon: '/src/assets/stocker_logo.svg',
+                });
+
+                // Optionally handle click event for the browser notification
+                browserNotification.onclick = () => {
+                    window.focus(); // Bring the user back to your app
+                };
+            } else {
+                console.warn('Notification permission is not granted');
+            }
+
+            // Automatically remove popup notification after 5 seconds
             const timeoutId = setTimeout(() => {
                 setPopupNotifications((prev) =>
                     prev.filter((popup) => popup.id !== newNotification.id)
