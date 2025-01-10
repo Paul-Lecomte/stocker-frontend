@@ -31,25 +31,21 @@ The backend is built with Node.js, and the frontend is built using React.js and 
 
 ## TODO
 Things done and not yet done:
-- Backend
-   - Stock Management
-      - [x] Create, Read, Update, Delete furniture items
-      - [x] Track stock movements (IN/OUT)
-      - [x] Fetch stock movements by product
-   - User Management
-      - [x] Authentication with JWT
-      - [x] User roles and access control
-- Frontend
-   - Stock Overview
-      - [x] View all furniture items and their details
-   - Stock Movement Tracking
-      - [x] Display stock movements on a graph
-   - Dashboard
-      - [x] Show stock levels and product information
-   - Notifications
-      - [x] Notification system for stock changes
-      - [x] Popup for the notifications
-      - [x] Popup for the notifications on the browser
+- Stock Overview
+   - [x] View all furniture items and their details
+- Stock Movement Tracking
+   - [x] Enable the search of furniture by their name
+   - [x] Display stock movements on a graph
+- Dashboard
+   - [x] Show stock levels and product information
+- User management
+  - [x] Show all the user with their rights
+  - [x] Enable the creation of new users
+  - [x] Enable the edit of existing user
+- Notifications
+   - [x] Notification system for stock changes
+   - [x] Popup for the notifications
+   - [x] Popup for the notifications on the browser
 
 ## Installation
 ### Clone the repo
