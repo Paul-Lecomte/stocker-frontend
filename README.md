@@ -38,6 +38,7 @@ Things done and not yet done:
    - [x] Display stock movements on a graph
 - Dashboard
    - [x] Show stock levels and product information
+   - [x] Timezone are selected automatically
 - User management
   - [x] Show all the user with their rights
   - [x] Enable the creation of new users
