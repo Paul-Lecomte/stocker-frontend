@@ -38,6 +38,7 @@ export const NotificationProvider = ({ children }) => {
             const newNotification = {
                 id: Date.now(),
                 message: notificationMessage,
+                furnitureId
             };
 
             // Add popup notification
@@ -85,11 +86,19 @@ export const NotificationProvider = ({ children }) => {
     }, []); // Run effect only once on mount
 
     return (
-        <NotificationContext.Provider value={{ addPopupNotification: setPopupNotifications }}>
+        <NotificationContext.Provider value={{addPopupNotification: setPopupNotifications}}>
             {children}
             <div className="fixed top-10 right-4 space-y-2 z-50">
                 {popupNotifications.map((popup) => (
-                    <div key={popup.id} className="p-4 bg-blue-500 text-white rounded shadow-lg">
+                    <div
+                        key={popup.id}
+                        className="p-4 bg-blue-500 text-white rounded shadow-lg cursor-pointer hover:bg-blue-600"
+                        onClick={() => {
+                            if (popup.furnitureId) {
+                                window.location.href = `/products_details/${popup.furnitureId}`;
+                            }
+                        }}
+                    >
                         {popup.message}
                     </div>
                 ))}
