@@ -47,6 +47,7 @@ Things done and not yet done:
    - [x] Notification system for stock changes
    - [x] Popup for the notifications
    - [x] Popup for the notifications on the browser
+   - [x] Navigate to the furniture page on click
 
 ## Installation
 ### Clone the repo
