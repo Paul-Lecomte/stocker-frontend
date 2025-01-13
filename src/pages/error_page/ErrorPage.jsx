@@ -5,6 +5,8 @@ import './ErrorPage.css';
 const ErrorPage = () => {
     const [showAnimation, setShowAnimation] = useState(false);
 
+    console.log("you should press ctrl + alt + d")
+
     const trigger = () => {
         window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
     };
