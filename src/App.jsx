@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './App.css';
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ErrorPage from "./pages/error_page/ErrorPage.jsx";
