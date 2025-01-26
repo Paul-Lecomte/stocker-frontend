@@ -16,13 +16,13 @@ const NotificationsComp = () => {
         furnitureId: '',
         threshold: '',
         comparison: 'LESS_THAN',
+        email: '',
     });
     const [activeTab, setActiveTab] = useState('created');
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredFurniture, setFilteredFurniture] = useState([]);
     const [furnitureName, setFurnitureName] = useState('');
 
-    // Fetch notifications
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
@@ -38,21 +38,16 @@ const NotificationsComp = () => {
                     withCredentials: true,
                 });
 
-                if (response.data.length > 0) {
-                    setNotifications(response.data);
-                } else {
-                    setNotifications([]);
-                }
+                setNotifications(response.data.length > 0 ? response.data : []);
             } catch (error) {
                 console.error('Error fetching notifications:', error);
-                setNotifications([]); // Ensure the state is cleared if there's an error
+                setNotifications([]);
             }
         };
 
         fetchNotifications();
     }, []);
 
-    // Handle form input change
     const handleInputChange = (value, name) => {
         setNewNotification((prev) => ({
             ...prev,
@@ -60,14 +55,12 @@ const NotificationsComp = () => {
         }));
     };
 
-    // Handle search input change
     const handleSearchChange = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
         filterFurniture(query);
     };
 
-    // Fetch and filter furniture based on search query
     const filterFurniture = async (query) => {
         if (query) {
             try {
@@ -84,7 +77,6 @@ const NotificationsComp = () => {
         }
     };
 
-    // Handle furniture selection from search result
     const handleFurnitureSelect = (furniture) => {
         setNewNotification((prev) => ({
             ...prev,
@@ -95,11 +87,10 @@ const NotificationsComp = () => {
         setFilteredFurniture([]);
     };
 
-    // Create a new notification
     const handleCreateNotification = async () => {
         const notificationData = {
             ...newNotification,
-            threshold: Number(newNotification.threshold), // Convert to number
+            threshold: Number(newNotification.threshold),
         };
 
         try {
@@ -117,14 +108,20 @@ const NotificationsComp = () => {
             }, {
                 withCredentials: true,
             });
+
             setNotifications((prev) => [...prev, response.data.notification]);
-            setNewNotification({ name: '', furnitureId: '', threshold: '', comparison: 'LESS_THAN' });
+            setNewNotification({
+                name: '',
+                furnitureId: '',
+                threshold: '',
+                comparison: 'LESS_THAN',
+                email: '',
+            });
         } catch (error) {
             console.error('Failed to create notification:', error);
         }
     };
 
-    // Delete a notification
     const handleDeleteNotification = async (id) => {
         try {
             await axios.delete(`http://localhost:3000/api/notifications/${id}`, {
@@ -136,15 +133,10 @@ const NotificationsComp = () => {
         }
     };
 
-    // Filter notifications based on their activation status
     const filteredNotifications = (notifications || []).filter((notification) => {
-        if (activeTab === 'created') {
-            // Show notifications that are not activated
-            return !notification.isActivated;
-        } else {
-            // Show notifications that are activated or triggered
-            return notification.isActivated || notification.isTriggered;
-        }
+        return activeTab === 'created'
+            ? !notification.isActivated
+            : notification.isActivated || notification.isTriggered;
     });
 
     return (
@@ -221,6 +213,16 @@ const NotificationsComp = () => {
                         onInput={(e) => {
                             e.target.value = e.target.value.replace(/[^0-9]/g, '');
                         }}
+                    />
+
+                    <Input
+                        type="email"
+                        label="Notification Email (Optional)"
+                        name="email"
+                        value={newNotification.email}
+                        onChange={(e) => handleInputChange(e.target.value, 'email')}
+                        color="blue-gray"
+                        className="text-white bg-gray-800 border border-gray-600 focus:ring-blue-500 focus:border-blue-500"
                     />
 
                     <Select
