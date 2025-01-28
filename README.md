@@ -123,3 +123,4 @@ VITE_API_URL=http://localhost:3000/api/
 VITE_IMG_URL=http://localhost:3000/images/
 ```
 
+Also if you liked this project consider giving me a follow and a star it helps a lot thanks :3
