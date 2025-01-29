@@ -139,6 +139,32 @@ const NotificationsComp = () => {
             : notification.isActivated || notification.isTriggered;
     });
 
+    const handleEditClick = (notification) => {
+        setEditNotification({ ...notification });
+        setModalOpen(true);
+    };
+
+    const handleEditChange = (value, name) => {
+        setEditNotification((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleEditSave = async () => {
+        try {
+            await axios.put(`http://localhost:3000/api/notifications/${editNotification._id}`, editNotification, {
+                withCredentials: true,
+            });
+            setNotifications((prev) =>
+                prev.map((n) => (n._id === editNotification._id ? editNotification : n))
+            );
+            setModalOpen(false);
+        } catch (error) {
+            console.error('Failed to update notification:', error);
+        }
+    };
+
     return (
         <Card className="p-8 bg-gray-800 text-white rounded-none">
             <Typography variant="h4" className="mb-6 text-center">Notifications</Typography>
