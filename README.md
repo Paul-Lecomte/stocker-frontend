@@ -53,6 +53,7 @@ Things done and not yet done:
    - [x] Popup for the notifications
    - [x] Popup for the notifications on the browser
    - [x] Navigate to the furniture page on click
+   - [x] Edit the notifications
 
 ## Installation
 ### Clone the repo
