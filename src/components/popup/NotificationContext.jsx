@@ -57,7 +57,7 @@ export const NotificationProvider = ({ children }) => {
 
                 // Optionally handle click event for the browser notification
                 browserNotification.onclick = () => {
-                    window.focus(); // Bring the user back to your app
+                    window.focus(); // Bring the user back
                 };
             } else {
                 console.warn('Notification permission is not granted');
