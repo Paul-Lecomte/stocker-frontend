@@ -300,42 +300,57 @@ const NotificationsComp = () => {
                     </Card>
                 ))}
             </div>
-            {editNotification && (
-                <Dialog open={modalOpen} handler={() => setModalOpen(false)}>
-                    <DialogHeader>Edit Notification</DialogHeader>
-                    <DialogBody>
+            <Dialog open={modalOpen} handler={() => setModalOpen(false)}>
+                <DialogHeader>Edit Notification</DialogHeader>
+                <DialogBody divider>
+                    <div className="mb-4">
                         <Input
-                            label="Name"
-                            value={editNotification.name}
+                            label="Notification Name"
+                            value={editNotification?.name}
                             onChange={(e) => handleEditChange(e.target.value, 'name')}
+                            color="blue-gray"
                         />
+                    </div>
+
+                    <div className="mb-4">
                         <Input
                             label="Threshold"
-                            type="number"
-                            value={editNotification.threshold}
+                            value={editNotification?.threshold}
                             onChange={(e) => handleEditChange(e.target.value, 'threshold')}
+                            color="blue-gray"
                         />
+                    </div>
+
+                    <div className="mb-4">
+                        <Input
+                            label="Notification Email (Optional)"
+                            value={editNotification?.email}
+                            onChange={(e) => handleEditChange(e.target.value, 'email')}
+                            color="blue-gray"
+                        />
+                    </div>
+
+                    <div className="mb-4">
                         <Select
                             label="Comparison"
-                            value={editNotification.comparison}
+                            value={editNotification?.comparison}
                             onChange={(value) => handleEditChange(value, 'comparison')}
+                            color="blue-gray"
                         >
                             <Option value="LESS_THAN">Less Than</Option>
                             <Option value="GREATER_THAN">Greater Than</Option>
                         </Select>
-                        <Input
-                            label="Email"
-                            type="email"
-                            value={editNotification.email}
-                            onChange={(e) => handleEditChange(e.target.value, 'email')}
-                        />
-                    </DialogBody>
-                    <DialogFooter>
-                        <Button color="blue" onClick={handleEditSave}>Save</Button>
-                        <Button color="gray" onClick={() => setModalOpen(false)}>Cancel</Button>
-                    </DialogFooter>
-                </Dialog>
-            )}
+                    </div>
+                </DialogBody>
+                <DialogFooter>
+                    <Button onClick={handleEditSave} color="green">
+                        Save
+                    </Button>
+                    <Button onClick={() => setModalOpen(false)} color="red">
+                        Cancel
+                    </Button>
+                </DialogFooter>
+            </Dialog>
         </Card>
     );
 };
