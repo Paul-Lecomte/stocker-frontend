@@ -7,10 +7,16 @@ import {
     Typography,
     Select,
     Option,
+    Dialog,
+    DialogHeader,
+    DialogBody,
+    DialogFooter
 } from '@material-tailwind/react';
 
 const NotificationsComp = () => {
     const [notifications, setNotifications] = useState([]);
+    const [editNotification, setEditNotification] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
     const [newNotification, setNewNotification] = useState({
         name: '',
         furnitureId: '',
@@ -289,10 +295,47 @@ const NotificationsComp = () => {
                             >
                                 Delete
                             </Button>
+                            <Button onClick={() => handleEditClick(notification)} color="yellow">Edit</Button>
                         </div>
                     </Card>
                 ))}
             </div>
+            {editNotification && (
+                <Dialog open={modalOpen} handler={() => setModalOpen(false)}>
+                    <DialogHeader>Edit Notification</DialogHeader>
+                    <DialogBody>
+                        <Input
+                            label="Name"
+                            value={editNotification.name}
+                            onChange={(e) => handleEditChange(e.target.value, 'name')}
+                        />
+                        <Input
+                            label="Threshold"
+                            type="number"
+                            value={editNotification.threshold}
+                            onChange={(e) => handleEditChange(e.target.value, 'threshold')}
+                        />
+                        <Select
+                            label="Comparison"
+                            value={editNotification.comparison}
+                            onChange={(value) => handleEditChange(value, 'comparison')}
+                        >
+                            <Option value="LESS_THAN">Less Than</Option>
+                            <Option value="GREATER_THAN">Greater Than</Option>
+                        </Select>
+                        <Input
+                            label="Email"
+                            type="email"
+                            value={editNotification.email}
+                            onChange={(e) => handleEditChange(e.target.value, 'email')}
+                        />
+                    </DialogBody>
+                    <DialogFooter>
+                        <Button color="blue" onClick={handleEditSave}>Save</Button>
+                        <Button color="gray" onClick={() => setModalOpen(false)}>Cancel</Button>
+                    </DialogFooter>
+                </Dialog>
+            )}
         </Card>
     );
 };
