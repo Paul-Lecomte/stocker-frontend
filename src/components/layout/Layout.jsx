@@ -9,22 +9,23 @@ const Layout = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if userInfo exists in localStorage (indicating that the user is logged in)
         const userInfoFromStorage = localStorage.getItem('userInfo');
-
-        // If userInfo doesn't exist or is empty, redirect to login page
         if (!userInfoFromStorage || userInfoFromStorage === '') {
             navigate('/login');
         }
-    }, [navigate]);  // Only rerun this effect when navigate changes
+    }, [navigate]);
 
     return (
-        <div className="App">
+        <div className="flex flex-col min-h-screen">
             <Header />
-            <Nav />
-            <div className="right-0 w-9/12 h-screen py-20"
-                 style={{ background: "#101923", marginLeft: "25%" }}>
-                <Outlet />
+            <div className="flex flex-1">
+                <Nav />
+                <main
+                    className="w-9/12 pt-20"
+                    style={{ background: "#101923", marginLeft: "25%" }}
+                >
+                    <Outlet />
+                </main>
             </div>
             <Footer />
         </div>
