@@ -67,6 +67,7 @@ const NotificationsComp = () => {
         filterFurniture(query);
     };
 
+    // Search feature
     const filterFurniture = async (query) => {
         if (query) {
             try {
@@ -83,6 +84,7 @@ const NotificationsComp = () => {
         }
     };
 
+    // After search when you click on one of the results this will take the id
     const handleFurnitureSelect = (furniture) => {
         setNewNotification((prev) => ({
             ...prev,
@@ -190,6 +192,7 @@ const NotificationsComp = () => {
                 </Button>
             </div>
 
+            {/* Search and creating notifications */}
             <Card className="p-6 bg-gray-700 mb-8">
                 <Typography variant="h5" className="mb-6 text-white">Create Notification</Typography>
                 <form className="flex flex-col justify-around space-y-8" onSubmit={(e) => e.preventDefault()}>
@@ -279,6 +282,7 @@ const NotificationsComp = () => {
                 </form>
             </Card>
 
+            {/* List all the notifications */}
             <div className="overflow-y-auto max-h-96">
                 {filteredNotifications.map((notification) => (
                     <Card key={notification._id} className="p-4 mb-4 bg-gray-700">
@@ -300,6 +304,7 @@ const NotificationsComp = () => {
                     </Card>
                 ))}
             </div>
+            {/* Modal for editing */}
             <Dialog open={modalOpen} handler={() => setModalOpen(false)}>
                 <DialogHeader>Edit Notification</DialogHeader>
                 <DialogBody divider>
