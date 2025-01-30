@@ -14,6 +14,7 @@ const Movement = () => {
     const [endDate, setEndDate] = useState('');
     const [filteredDataWithDates, setFilteredDataWithDates] = useState([]);
 
+    // This is going to fetch all the movements from all the furnitures (if their is a lot of data this might be slow)
     useEffect(() => {
         const fetchProductsData = async () => {
             try {
@@ -94,6 +95,7 @@ const Movement = () => {
         }
     };
 
+    // Date filter
     const handleApplyDateFilter = () => {
         const filteredProductsData = productsData.filter(product => selectedProducts.includes(product.id));
 
@@ -120,6 +122,7 @@ const Movement = () => {
 
     const chartLabels = filteredDataWithDates[0]?.movements.map(movement => new Date(movement.createdAt).toLocaleDateString()) || ['Current Quantity'];
 
+    // Chart styling
     const chartData = {
         labels: chartLabels,
         datasets: filteredDataWithDates.map((product, index) => ({
