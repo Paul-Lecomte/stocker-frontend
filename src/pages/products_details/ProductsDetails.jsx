@@ -55,6 +55,7 @@ const ProductsDetails = () => {
         navigate(`/products_details/${furnitureId}`);
     };
 
+    // Go fetch the furniture and the movements with the given id
     const fetchProductById = async (id) => {
         try {
             const productResponse = await axios.get(`http://localhost:3000/api/furniture/${id}`, {
@@ -77,6 +78,7 @@ const ProductsDetails = () => {
         } catch (error) {}
     };
 
+    // All that just for some dates and preset
     useEffect(() => {
         if (stockMovements.length === 0) return;
 
@@ -113,6 +115,7 @@ const ProductsDetails = () => {
         setFilteredMovements(filtered);
     }, [stockMovements, timePeriod, customStartDate, customEndDate]);
 
+    // This is the almighty chart where we give the movements of the furniture
     const chartData = {
         labels:
             Array.isArray(filteredMovements) && filteredMovements.length > 0
@@ -133,6 +136,7 @@ const ProductsDetails = () => {
         ],
     };
 
+    // This is to style the chart
     const chartOptions = {
         responsive: true,
         plugins: {
