@@ -30,14 +30,6 @@ echo "Installing frontend dependencies..."
 cd "$FRONTEND_DIR"
 npm install
 
-# Setup environment file (optional, update with actual values)
-if [ ! -f ".env" ]; then
-    echo "Creating frontend .env file..."
-    cat <<EOL > .env
-VITE_API_URL=http://localhost:5000
-EOL
-fi
-
 cd ..
 
 # Install backend dependencies
@@ -49,9 +41,11 @@ npm install
 if [ ! -f ".env" ]; then
     echo "Creating backend .env file..."
     cat <<EOL > .env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/stocker
+PORT=3000
+DATABASE_URI=mongodb://localhost:27017/stocker
 JWT_SECRET=your-secret-key
+EMAIL_USER=sender@email.com
+EMAIL_PASS=senderemailpassword
 EOL
 fi
 
