@@ -166,12 +166,13 @@ const Products = () => {
             // Fetch userInfo from local storage
             const userInfo = JSON.parse(localStorage.getItem("userInfo"));
             const { first_name, last_name } = userInfo?.user || {};
+            const userId = userInfo?.user?._id;
             const username = `${first_name} ${last_name}`.trim();
 
             // Make API request with username
             const response = await axios.put(
                 `http://localhost:3000/api/furniture/increment/${selectedProduct._id}`,
-                { id: selectedProduct._id, quantity, username },
+                { id: selectedProduct._id, quantity, username, userId },
                 { withCredentials: true }
             );
 
@@ -193,12 +194,13 @@ const Products = () => {
             // Fetch userInfo from local storage
             const userInfo = JSON.parse(localStorage.getItem("userInfo"));
             const { first_name, last_name } = userInfo?.user || {};
+            const userId = userInfo?.user?._id;
             const username = `${first_name} ${last_name}`.trim();
 
             // Make API request with username
             const response = await axios.put(
                 `http://localhost:3000/api/furniture/decrement/${selectedProduct._id}`,
-                { id: selectedProduct._id, quantity, username },
+                { id: selectedProduct._id, quantity, username, userId },
                 { withCredentials: true }
             );
 
