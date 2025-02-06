@@ -32,11 +32,13 @@ export function AvatarWithUserDropdown() {
         try {
             await userLogout();
             logout();
-            navigate('login');
+            localStorage.removeItem('userInfo');
+            window.location.reload();
         } catch (err) {
             console.log(err);
         }
     };
+
 
     return (
         <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
