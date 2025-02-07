@@ -1,9 +1,10 @@
 import { Line } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Card, Input, Typography, Button, Spinner, Dialog, ButtonGroup} from "@material-tailwind/react";
+import { Card, Input, Typography, Button, Spinner, Dialog, ButtonGroup } from "@material-tailwind/react";
 import axios from "axios";
 import debounce from "lodash/debounce";
+import Confetti from "react-confetti";
 
 const Products = () => {
     const navigate = useNavigate();
@@ -18,6 +19,8 @@ const Products = () => {
     const [noDataFound, setNoDataFound] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showConfetti, setShowConfetti] = useState(false);
+    const specificWord = "confetti"
 
     const fetchSearchResults = debounce(async (query) => {
         if (!query.trim()) {
@@ -33,6 +36,16 @@ const Products = () => {
             });
             setSearchResults(response.data);
             setIsLoading(false);
+
+            // Trigger confetti only if the search query matches the specific word
+            if (query.toLowerCase() === specificWord.toLowerCase()) {
+                setShowConfetti(true);
+
+                // Hide confetti after 2 seconds
+                setTimeout(() => {
+                    setShowConfetti(false);
+                }, 4000);
+            }
         } catch (error) {
             setIsLoading(false);
         }
@@ -82,7 +95,6 @@ const Products = () => {
                     new Date(movement.createdAt) >= startDate && new Date(movement.createdAt) <= endDate
             );
         } else {
-            //I am keeping these just incase i want to add a set time period filter
             switch (timePeriod) {
                 case "Last 30 days":
                     filtered = filtered.filter(
@@ -151,78 +163,59 @@ const Products = () => {
         setFilteredMovements(stockMovements);
     };
 
-    // Open the modal
     const openModal = () => {
         setIsModalOpen(true);
     };
 
-    // Close the modal
     const closeModal = () => {
         setIsModalOpen(false);
     };
 
     const handleIncrementStock = async (quantity) => {
         try {
-            // Fetch userInfo from local storage
             const userInfo = JSON.parse(localStorage.getItem("userInfo"));
             const { first_name, last_name } = userInfo?.user || {};
             const userId = userInfo?.user?._id;
             const username = `${first_name} ${last_name}`.trim();
 
-            // Make API request with username
             const response = await axios.put(
                 `http://localhost:3000/api/furniture/increment/${selectedProduct._id}`,
                 { id: selectedProduct._id, quantity, username, userId },
                 { withCredentials: true }
             );
 
-            // Update the selected product details
             setSelectedProduct(response.data.furniture);
-
-            // Refresh movements and product details
             fetchProductById(selectedProduct._id);
         } catch (error) {
-            console.error(
-                "Error incrementing stock:",
-                error.response?.data?.message || error.message
-            );
+            console.error("Error incrementing stock:", error.response?.data?.message || error.message);
         }
     };
 
     const handleDecrementStock = async (quantity) => {
         try {
-            // Fetch userInfo from local storage
             const userInfo = JSON.parse(localStorage.getItem("userInfo"));
             const { first_name, last_name } = userInfo?.user || {};
             const userId = userInfo?.user?._id;
             const username = `${first_name} ${last_name}`.trim();
 
-            // Make API request with username
             const response = await axios.put(
                 `http://localhost:3000/api/furniture/decrement/${selectedProduct._id}`,
                 { id: selectedProduct._id, quantity, username, userId },
                 { withCredentials: true }
             );
 
-            // Update the selected product details
             setSelectedProduct(response.data.furniture);
-
-            // Refresh movements and product details
             fetchProductById(selectedProduct._id);
         } catch (error) {
-            console.error(
-                "Error decrementing stock:",
-                error.response?.data?.message || error.message
-            );
+            console.error("Error decrementing stock:", error.response?.data?.message || error.message);
         }
     };
 
     return (
         <Card className="p-6 bg-gray-800 text-white rounded-none">
+            {showConfetti && <Confetti />}
             <div className="flex flex-col mb-4 space-y-2">
                 <Typography variant="h6">Product Search</Typography>
-
-                {/* Search Input */}
                 <Input
                     label="Search Furniture"
                     color="white"
@@ -230,11 +223,9 @@ const Products = () => {
                     onChange={handleSearchChange}
                     className="mb-4"
                 />
-
-                {/* Search Results */}
                 <div className="space-y-2">
                     {isLoading ? (
-                        <Spinner style={{width: "20px", height: "20px"}} color="blue"/> // Loading state
+                        <Spinner style={{width: "20px", height: "20px"}} color="blue"/>
                     ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
                         searchResults.map((product) => (
                             <Typography
@@ -249,8 +240,6 @@ const Products = () => {
                         <span>No results found</span>
                     )}
                 </div>
-
-                {/* Custom Date Range */}
                 <div className="flex space-x-2 mt-4">
                     <Input
                         type="date"
@@ -275,9 +264,7 @@ const Products = () => {
                         </Button>
                     </ButtonGroup>
                 </div>
-                {/* Furniture Details Table */}
                 <div className="mt-6 flex">
-                    {/* Table */}
                     <div className="overflow-x-auto w-3/4">
                         <table className="min-w-full table-auto">
                             <thead>
@@ -300,32 +287,10 @@ const Products = () => {
                             </tbody>
                         </table>
                     </div>
-
-                    {/* Product Image */}
-                    {selectedProduct && selectedProduct.picture && (
-                        <div className="flex justify-center items-center mt-6">
-                            <img
-                                src={`http://localhost:3000/${selectedProduct.picture}`}
-                                alt={selectedProduct.name}
-                                className="w-40 h-40 object-contain rounded-lg cursor-pointer"
-                                onClick={openModal}
-                            />
-                        </div>
-                    )}
                 </div>
-            </div>
-            {/* Modal for larger image */}
-            <Dialog open={isModalOpen} onClose={closeModal} className="w-2/3 h-3/3 p-6 bg-gray-800 text-white rounded-md flex flex-col items-center">
-                <img
-                    src={`http://localhost:3000/${selectedProduct?.picture}`}
-                    alt={selectedProduct?.name}
-                    className="max-w-full max-h-full size-fit"
-                />
-                <Button className="mt-4" onClick={closeModal}>Close</Button>
-            </Dialog>
-            {/* Chart */}
-            <div className="mt-6">
-                <Line data={chartData} options={chartOptions}/>
+                <div className="mt-6">
+                    <Line data={chartData} options={chartOptions} />
+                </div>
             </div>
         </Card>
     );
