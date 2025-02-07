@@ -3,6 +3,10 @@ import { Card, Typography } from "@material-tailwind/react";
 import { useFurnitureStore } from '../../stores/furnitureStore.js';
 import axios from "axios";
 
+const KONAMI_CODE = [
+    'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'
+];
+
 const Dashboard = () => {
     const {
         furnitureCount = 0,
@@ -14,6 +18,7 @@ const Dashboard = () => {
 
     const [mostSoldProducts, setMostSoldProducts] = useState([]);
     const [highestPriceProducts, setHighestPriceProducts] = useState([]);
+    const [isKonamiActive, setIsKonamiActive] = useState(false);
 
     useEffect(() => {
         // Fetch the dashboard data
@@ -49,11 +54,37 @@ const Dashboard = () => {
         fetchHighestPrice();
     }, [fetchDashboardData]);
 
+    useEffect(() => {
+        let konamiIndex = 0;
+        const handleKeyPress = (event) => {
+            if (event.key === KONAMI_CODE[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === KONAMI_CODE.length) {
+                    setIsKonamiActive(true);
+                    setTimeout(() => setIsKonamiActive(false), 5000);
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, []);
+
     if (furnitureLoading) return <div className="text-white">Loading...</div>;
     if (error) return <div className="text-white">Error: {error}</div>;
 
     return (
-        <div className="flex flex-col items-center space-y-6 min-h-screen text-white" style={{background: "#101923"}}>
+        <div
+            className="flex flex-col items-center space-y-6 min-h-screen text-white"
+            style={{
+                background: isKonamiActive
+                    ? "linear-gradient(135deg, #ff00cc, #00ffff)" // Cyberpunk colors
+                    : "#101923"
+            }}
+        >
             <Typography variant="h2" className="text-blue-400 mb-4">Dashboard</Typography>
 
             <div className="flex space-x-6">
