@@ -3,6 +3,7 @@ import { Card, Typography, Input, Button } from "@material-tailwind/react";
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import './styles.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -13,8 +14,9 @@ const Movement = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [filteredDataWithDates, setFilteredDataWithDates] = useState([]);
+    const [isAnimating, setIsAnimating] = useState(false);  // To trigger animation
 
-    // This is going to fetch all the movements from all the furnitures (if their is a lot of data this might be slow)
+    // Fetch products data
     useEffect(() => {
         const fetchProductsData = async () => {
             try {
@@ -43,7 +45,7 @@ const Movement = () => {
                     };
                 });
 
-                // Calculate default date range for the last two weeks
+                // Set default date range
                 const now = new Date();
                 const twoWeeksAgo = new Date();
                 twoWeeksAgo.setDate(now.getDate() - 14);
@@ -56,7 +58,6 @@ const Movement = () => {
                 setProductsData(products);
                 setSelectedProducts(products.map(product => product.id));
 
-                // Filter data for the default date range
                 const filteredData = products.map(product => {
                     const filteredMovements = product.movements.filter(movement => {
                         const movementDate = new Date(movement.createdAt);
@@ -86,6 +87,21 @@ const Movement = () => {
         fetchProductsData();
     }, []);
 
+    // Handle button combination (Ctrl + Shift + B)
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'B') {
+                setIsAnimating(true);
+                setTimeout(() => setIsAnimating(false), 10000);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     const handleDateChange = (e) => {
         const { name, value } = e.target;
         if (name === 'startDate') {
@@ -95,7 +111,6 @@ const Movement = () => {
         }
     };
 
-    // Date filter
     const handleApplyDateFilter = () => {
         const filteredProductsData = productsData.filter(product => selectedProducts.includes(product.id));
 
@@ -122,7 +137,6 @@ const Movement = () => {
 
     const chartLabels = filteredDataWithDates[0]?.movements.map(movement => new Date(movement.createdAt).toLocaleDateString()) || ['Current Quantity'];
 
-    // Chart styling
     const chartData = {
         labels: chartLabels,
         datasets: filteredDataWithDates.map((product, index) => ({
@@ -137,7 +151,7 @@ const Movement = () => {
     };
 
     return (
-        <Card className="rounded-none p-6 bg-gray-800 text-white">
+        <Card className={`rounded-none p-6 bg-gray-800 text-white ${isAnimating ? 'animate-pulse' : ''}`}>
             <Typography variant="h6" className="mb-4">Full Inventory</Typography>
 
             <div className="flex mb-4">
