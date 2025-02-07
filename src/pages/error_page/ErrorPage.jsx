@@ -5,7 +5,7 @@ import './ErrorPage.css';
 const ErrorPage = () => {
     const [showAnimation, setShowAnimation] = useState(false);
 
-    console.log("you should press ctrl + alt + d")
+    console.log("you should press ctrl + alt + d");
 
     const trigger = () => {
         window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
@@ -42,7 +42,11 @@ const ErrorPage = () => {
                 <Button color="light-blue" onClick={() => window.location.href = "/"}>
                     Go to Home
                 </Button>
-                <Button onClick={trigger} color="light-blue" className="mt-4">
+                {/* secret button hidden until Go to Home button is hovered */}
+                <Button
+                    onClick={trigger}
+                    color="light-blue"
+                    className="mt-4 secret-button">
                     ?????
                 </Button>
             </Card>
