@@ -54,7 +54,7 @@ const ErrorPage = () => {
             {/* Display animation if triggered */}
             {showAnimation && (
                 <div className="secret-animation">
-                    <img src="/mmh.png" alt="Surprise" />
+                    <img src="/mmh.webp" alt="Surprise" />
                 </div>
             )}
         </div>
