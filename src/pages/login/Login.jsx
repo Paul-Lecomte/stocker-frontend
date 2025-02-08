@@ -21,9 +21,10 @@ const Login = () => {
     const [attempts, setAttempts] = useState(0);
     const [hacking, setHacking] = useState(false);
     const [hackingText, setHackingText] = useState([]);
+    const [error, setError] = useState("");
     const buttonRef = useRef(null);
-    const { user, error, userLoading, login, success } = useUserStore();
-    const { setCredentials, userInfo } = useAuthStore();
+    const { user, error: storeError, userLoading, login, success } = useUserStore();
+    const { setCredentials } = useAuthStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -45,7 +46,8 @@ const Login = () => {
                     clearInterval(interval);
                     setTimeout(() => {
                         setHacking(false);
-                        setAttempts(0);
+                        setAttempts(0); // Reset attempts after hacking
+                        setHackingText([]); // Clear hacking messages when reset
                     }, 3000);
                 }
             }, 1000);
@@ -54,12 +56,16 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(""); // Clear any existing error before making a new attempt
         try {
-            await login({ email, password });
-        } catch (e) {
-            console.log(e);
+            const response = await login({ email, password });
+            // Check for 401 Unauthorized response
+            if (response.status === 401) {
+                setError("Login failed. Incorrect email or password.");
+            }
+        } catch (err) {
+            setError("An error occurred. Please try again later.");
         }
-
         setAttempts(prev => prev + 1);
     };
 
