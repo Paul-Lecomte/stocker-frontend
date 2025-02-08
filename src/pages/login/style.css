@@ -1,0 +1,71 @@
+/* Add class for rotating button */
+.rotating-button {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Add hover effect for the rotating button */
+.rotating-button:hover {
+    transform: translate(30px, -20px) rotate(15deg);
+}
+
+/* Add class for avoiding cursor */
+.avoid-cursor {
+    position: relative;
+    animation: evadeCursor 0.3s ease-in-out;
+}
+
+@keyframes evadeCursor {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(40px, -30px) rotate(20deg);
+    }
+    50% {
+        transform: translate(-50px, 10px) rotate(-15deg);
+    }
+    75% {
+        transform: translate(30px, 20px) rotate(10deg);
+    }
+    100% {
+        transform: translate(-20px, -10px) rotate(-10deg);
+    }
+}
+
+/* Hacking Terminal Modal */
+.hacking-modal {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 400px;
+    height: 250px;
+    background: black;
+    color: limegreen;
+    font-family: 'Courier New', monospace;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px limegreen;
+    z-index: 9999;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.hacking-modal.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.hacking-text {
+    white-space: pre-wrap;
+    overflow: hidden;
+    display: inline-block;
+    border-right: 2px solid limegreen;
+    animation: blinkCursor 0.8s steps(2) infinite;
+}
+
+@keyframes blinkCursor {
+    0% { border-color: limegreen; }
+    50% { border-color: transparent; }
+    100% { border-color: limegreen; }
+}
