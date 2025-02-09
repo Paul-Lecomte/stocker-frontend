@@ -7,7 +7,7 @@
 # Stocker Frontend
 
 ## About the project
-Stocker is an inventory management system that allows users to track the stock of furniture items, monitor stock movements, and analyze stock levels through visualizations.
+Stocker is an inventory management system that allows users to track the stock of furniture items, monitor stock movements, and analyze stock levels through visualizations (i have added many easter eggs be on the lookout).
 
 The backend is built with Node.js, and the frontend is built using React.js and Material Tailwind.
 
