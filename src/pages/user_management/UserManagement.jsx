@@ -7,7 +7,7 @@ const UserManagement = () => {
     const [userData, setUserData] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isAddMode, setIsAddMode] = useState(false);
-    const [editData, setEditData] = useState({ first_name: '', last_name: '', createdAt: '', email: '', password: '', role: '' });
+    const [editData, setEditData] = useState({ first_name: '', last_name: '', createdAt: '', email: '', role: '' });
     const [showPassword, setShowPassword] = useState({});
     const [showEditPassword, setShowEditPassword] = useState(false);
 
@@ -60,14 +60,14 @@ const UserManagement = () => {
     const handleEditClick = (user) => {
         setEditData(user);
         setIsAddMode(false);
-        setShowEditPassword(false);
+        setShowEditPassword(false); // Reset the password visibility state
         setIsDialogOpen(true);
     };
 
     const handleAddClick = () => {
         setEditData({ id: Date.now(), first_name: '', last_name: '', createdAt: '', email: '', password: '', role: '' });
         setIsAddMode(true);
-        setShowEditPassword(false);
+        setShowEditPassword(false); // Reset the password visibility state
         setIsDialogOpen(true);
     };
 
@@ -101,16 +101,22 @@ const UserManagement = () => {
             }
         } else {
             try {
+                const updatedUser = {
+                    first_name: editData.first_name,
+                    last_name: editData.last_name,
+                    email: editData.email,
+                    role: editData.role,
+                };
+
+                // Only send the password if it's updated
+                if (editData.password) {
+                    updatedUser.password = editData.password;
+                }
+
                 // Update the user in the backend
                 const response = await axios.put(
                     'http://localhost:3000/api/user/update',
-                    {
-                        first_name: editData.first_name,
-                        last_name: editData.last_name,
-                        email: editData.email,
-                        role: editData.role,
-                        password: editData.password, // Only send password if it's updated
-                    },
+                    updatedUser,
                     { withCredentials: true }
                 );
 
@@ -126,7 +132,6 @@ const UserManagement = () => {
             }
         }
     };
-
 
     const toggleShowPassword = (id) => {
         setShowPassword((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -164,7 +169,7 @@ const UserManagement = () => {
                         <td className="p-3">{user.createdAt.substring(0, 10)}</td>
                         <td className="p-3">{user.email}</td>
                         <td className="p-3 flex items-center">
-                            {showPassword[user._id] ? user.password : "••••••••"}
+                            {"••••••••"}
                             <IconButton
                                 variant="text"
                                 onClick={() => toggleShowPassword(user._id)}
@@ -210,6 +215,7 @@ const UserManagement = () => {
                             value={editData.email}
                             onChange={handleEditChange}
                         />
+                        {/* Option to update password */}
                         <div className="flex items-center">
                             <Input
                                 label="Password"
