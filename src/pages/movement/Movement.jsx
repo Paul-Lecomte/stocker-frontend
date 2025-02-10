@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography, Input, Button } from "@material-tailwind/react";
+import {Card, Typography, Input, Button, Spinner} from "@material-tailwind/react";
 import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import './styles.css';
+import {useFurnitureStore} from "../../stores/furnitureStore.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -14,7 +15,8 @@ const Movement = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [filteredDataWithDates, setFilteredDataWithDates] = useState([]);
-    const [isAnimating, setIsAnimating] = useState(false);  // To trigger animation
+    const [isAnimating, setIsAnimating] = useState(false);
+    const { furnitureLoading } = useFurnitureStore();
 
     // Fetch products data
     useEffect(() => {
@@ -149,6 +151,13 @@ const Movement = () => {
             borderColor: `hsl(${index * 70}, 70%, 70%)`,
         })),
     };
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <Card className={`rounded-none p-6 bg-gray-800 text-white ${isAnimating ? 'animate-pulse' : ''}`}>

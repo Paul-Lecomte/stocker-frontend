@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useUserStore } from '../../stores/userStore.js';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore.js';
-import { Input, Button, Typography } from "@material-tailwind/react";
+import {Input, Button, Typography, Spinner} from "@material-tailwind/react";
 import logo from "../../assets/stocker_name.svg";
 import './style.css';
+import {useFurnitureStore} from "../../stores/furnitureStore.js";
 
 const hackingMessages = [
     "Initializing breach protocol...",
@@ -26,6 +27,7 @@ const Login = () => {
     const { user, error: storeError, userLoading, login, success } = useUserStore();
     const { setCredentials } = useAuthStore();
     const navigate = useNavigate();
+    const { furnitureLoading } = useFurnitureStore();
 
     useEffect(() => {
         if (success) {
@@ -93,6 +95,13 @@ const Login = () => {
             }
         }
     }, [attempts]);
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <div className="flex flex-col justify-center items-center min-h-screen text-white" style={{ background: "#101923" }}>

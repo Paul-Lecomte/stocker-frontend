@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import {Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input, Select, Option} from "@material-tailwind/react";
+import {
+    Card,
+    Typography,
+    Button,
+    Dialog,
+    DialogBody,
+    DialogFooter,
+    Input,
+    Select,
+    Option,
+    Spinner
+} from "@material-tailwind/react";
 import axios from 'axios';
+import { useFurnitureStore } from '../../stores/furnitureStore.js';
 
 const StockMovementHistory = () => {
     const [movements, setMovements] = useState([]);
@@ -8,6 +20,7 @@ const StockMovementHistory = () => {
     const [users, setUsers] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isEasterEggActive, setIsEasterEggActive] = useState(false);
+    const { furnitureLoading } = useFurnitureStore();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -47,6 +60,13 @@ const StockMovementHistory = () => {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <Card className="rounded-none p-6 bg-gray-800 text-white">

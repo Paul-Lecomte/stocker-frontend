@@ -10,8 +10,9 @@ import {
     Dialog,
     DialogHeader,
     DialogBody,
-    DialogFooter
+    DialogFooter, Spinner
 } from '@material-tailwind/react';
+import {useFurnitureStore} from "../../stores/furnitureStore.js";
 
 const NotificationsComp = () => {
     const [notifications, setNotifications] = useState([]);
@@ -28,6 +29,7 @@ const NotificationsComp = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredFurniture, setFilteredFurniture] = useState([]);
     const [furnitureName, setFurnitureName] = useState('');
+    const { furnitureLoading } = useFurnitureStore();
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -172,6 +174,13 @@ const NotificationsComp = () => {
             console.error('Failed to update notification:', error);
         }
     };
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <Card className="p-8 bg-gray-800 text-white rounded-none">

@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input, Select, Option } from "@material-tailwind/react";
+import {
+    Card,
+    Typography,
+    Button,
+    Dialog,
+    DialogBody,
+    DialogFooter,
+    Input,
+    Select,
+    Option,
+    Spinner
+} from "@material-tailwind/react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {useFurnitureStore} from "../../stores/furnitureStore.js";
 
 const Inventory = () => {
     const [inventoryData, setInventoryData] = useState([]);
@@ -13,6 +25,7 @@ const Inventory = () => {
     const [isAisleDialogOpen, setIsAisleDialogOpen] = useState(false);
     const [aisleLocation, setAisleLocation] = useState('');
     const navigate = useNavigate();
+    const { furnitureLoading } = useFurnitureStore();
 
     // Fetch inventory and aisle data from backend on component mount
     useEffect(() => {
@@ -169,6 +182,13 @@ const Inventory = () => {
     const handleDetailsClick = (id) => {
         navigate(`/products_details/${id}`);
     };
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <Card className="rounded-none p-6 bg-gray-800 text-white">

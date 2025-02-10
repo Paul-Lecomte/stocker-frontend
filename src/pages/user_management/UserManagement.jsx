@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography, Button, Dialog, DialogBody, DialogFooter, Input, Select, Option, IconButton } from "@material-tailwind/react";
+import {
+    Card,
+    Typography,
+    Button,
+    Dialog,
+    DialogBody,
+    DialogFooter,
+    Input,
+    Select,
+    Option,
+    IconButton,
+    Spinner
+} from "@material-tailwind/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import axios from 'axios';
+import {useFurnitureStore} from "../../stores/furnitureStore.js";
 
 const UserManagement = () => {
     const [userData, setUserData] = useState([]);
@@ -10,6 +23,7 @@ const UserManagement = () => {
     const [editData, setEditData] = useState({ first_name: '', last_name: '', createdAt: '', email: '', role: '' });
     const [showPassword, setShowPassword] = useState({});
     const [showEditPassword, setShowEditPassword] = useState(false);
+    const { furnitureLoading } = useFurnitureStore();
 
     // For delete confirmation dialog
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -140,6 +154,13 @@ const UserManagement = () => {
     const toggleShowEditPassword = () => {
         setShowEditPassword(!showEditPassword);
     };
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <Card className="rounded-none p-6 bg-gray-800 text-white">

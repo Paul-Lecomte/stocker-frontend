@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography } from "@material-tailwind/react";
+import {Card, Spinner, Typography} from "@material-tailwind/react";
 import { useFurnitureStore } from '../../stores/furnitureStore.js';
 import axios from "axios";
 
@@ -73,7 +73,12 @@ const Dashboard = () => {
         return () => window.removeEventListener('keydown', handleKeyPress);
     }, []);
 
-    if (furnitureLoading) return <div className="text-white">Loading...</div>;
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
     if (error) return <div className="text-white">Error: {error}</div>;
 
     return (

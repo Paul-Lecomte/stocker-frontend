@@ -1,9 +1,10 @@
 import { Line } from "react-chartjs-2";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, Input, Select, Typography, Button, Spinner, Dialog } from "@material-tailwind/react";
 import axios from "axios";
 import debounce from "lodash/debounce";
+import {useFurnitureStore} from "../../stores/furnitureStore.js";
 
 const ProductsDetails = () => {
     const { id } = useParams();
@@ -19,6 +20,7 @@ const ProductsDetails = () => {
     const [noDataFound, setNoDataFound] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { furnitureLoading } = useFurnitureStore();
 
     useEffect(() => {
         if (id) {
@@ -168,6 +170,13 @@ const ProductsDetails = () => {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <Card className="p-6 bg-gray-800 text-white rounded-none">

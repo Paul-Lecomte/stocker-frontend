@@ -1,10 +1,11 @@
 import { Line } from "react-chartjs-2";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Input, Typography, Button, Spinner, Dialog, ButtonGroup } from "@material-tailwind/react";
 import axios from "axios";
 import debounce from "lodash/debounce";
 import Confetti from "react-confetti";
+import {useFurnitureStore} from "../../stores/furnitureStore.js";
 
 const Products = () => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Products = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
     const specificWord = "confetti"
+    const { furnitureLoading } = useFurnitureStore();
 
     const fetchSearchResults = debounce(async (query) => {
         if (!query.trim()) {
@@ -210,6 +212,13 @@ const Products = () => {
             console.error("Error decrementing stock:", error.response?.data?.message || error.message);
         }
     };
+
+    if (furnitureLoading)
+        return (
+            <div className="flex items-center justify-center h-screen w-full">
+                <Spinner className="h-12 w-12"/>
+            </div>
+        );
 
     return (
         <Card className="p-6 bg-gray-800 text-white rounded-none">
