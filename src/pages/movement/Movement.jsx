@@ -26,6 +26,7 @@ const Movement = () => {
                     headers: { Authorization: `Bearer ${localStorage.getItem('userInfo')?.token || ''}` },
                     withCredentials: true,
                 });
+                console.log(response)
 
                 const data = Array.isArray(response.data) ? response.data : [];
 
@@ -49,10 +50,10 @@ const Movement = () => {
 
                 // Set default date range
                 const now = new Date();
-                const twoWeeksAgo = new Date();
-                twoWeeksAgo.setDate(now.getDate() - 14);
+                const oneMonthago = new Date();
+                oneMonthago.setDate(now.getDate() - 30);
 
-                const defaultStartDate = twoWeeksAgo.toISOString().split('T')[0];
+                const defaultStartDate = oneMonthago.toISOString().split('T')[0];
                 const defaultEndDate = now.toISOString().split('T')[0];
 
                 setStartDate(defaultStartDate);
@@ -63,7 +64,7 @@ const Movement = () => {
                 const filteredData = products.map(product => {
                     const filteredMovements = product.movements.filter(movement => {
                         const movementDate = new Date(movement.createdAt);
-                        return movementDate >= twoWeeksAgo && movementDate <= now;
+                        return movementDate >= oneMonthago && movementDate <= now;
                     });
 
                     return {
@@ -134,8 +135,6 @@ const Movement = () => {
 
         setFilteredDataWithDates(filteredData);
     };
-
-    if (loading) return <p>Loading...</p>;
 
     const chartLabels = filteredDataWithDates[0]?.movements.map(movement => new Date(movement.createdAt).toLocaleDateString()) || ['Current Quantity'];
 
