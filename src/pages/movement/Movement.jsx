@@ -136,19 +136,45 @@ const Movement = () => {
         setFilteredDataWithDates(filteredData);
     };
 
-    const chartLabels = filteredDataWithDates[0]?.movements.map(movement => new Date(movement.createdAt).toLocaleDateString()) || ['Current Quantity'];
+    const allDates = new Set();
+    filteredDataWithDates.forEach(product => {
+        product.movements.forEach(movement => {
+            allDates.add(new Date(movement.createdAt).toLocaleDateString());
+        });
+    });
+
+// Sort dates chronologically
+    const chartLabels = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b)) || ['Current Quantity'];
 
     const chartData = {
         labels: chartLabels,
-        datasets: filteredDataWithDates.map((product, index) => ({
-            label: product.name,
-            data: product.movements.length
-                ? product.movements.map(movement => movement.quantity)
-                : [product.latestStockQuantity],
-            fill: false,
-            backgroundColor: `hsl(${index * 70}, 70%, 50%)`,
-            borderColor: `hsl(${index * 70}, 70%, 70%)`,
-        })),
+        datasets: filteredDataWithDates.map((product, index) => {
+            const dataMap = new Map();
+            let lastKnownQuantity = product.latestStockQuantity || 0; // Default to latest stock or 0 if undefined
+
+            // Fill dataMap with movement values
+            product.movements.forEach(movement => {
+                const date = new Date(movement.createdAt).toLocaleDateString();
+                lastKnownQuantity = movement.quantity; // Update last known quantity
+                dataMap.set(date, lastKnownQuantity);
+            });
+
+            // Generate data for the graph, ensuring continuity
+            const filledData = chartLabels.map(date => {
+                if (dataMap.has(date)) {
+                    lastKnownQuantity = dataMap.get(date);
+                }
+                return lastKnownQuantity;
+            });
+
+            return {
+                label: product.name,
+                data: filledData,
+                fill: false,
+                backgroundColor: `hsl(${index * 70}, 70%, 50%)`,
+                borderColor: `hsl(${index * 70}, 70%, 70%)`,
+            };
+        }),
     };
 
     if (furnitureLoading)
