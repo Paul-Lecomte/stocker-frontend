@@ -13,6 +13,8 @@ import {
 } from "@material-tailwind/react";
 import axios from 'axios';
 import { useFurnitureStore } from '../../stores/furnitureStore.js';
+import cheese from '../../assets/cheese.png'
+import './style.css'
 
 const StockMovementHistory = () => {
     const [movements, setMovements] = useState([]);
@@ -49,17 +51,6 @@ const StockMovementHistory = () => {
     useEffect(() => {
         fetchMovements();
     }, [filters]);
-
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.ctrlKey && event.shiftKey && event.code === 'KeyC') {
-                setIsEasterEggActive(true);
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
 
     if (furnitureLoading)
         return (
@@ -154,6 +145,11 @@ const StockMovementHistory = () => {
                     </div>
                 </div>
             )}
+            <div className="cheese-button fixed right-0 bottom-0" style={{zIndex: 999}}>
+                <button className="w-10 h-10" onClick={() => setIsEasterEggActive(true)}>
+                    <img className="contain-content" src={cheese} alt="cheeeeeeeeeeeese"/>
+                </button>
+            </div>
         </Card>
     );
 };

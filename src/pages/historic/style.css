@@ -1,0 +1,7 @@
+.cheese-button{
+    opacity: 0;
+}
+
+.cheese-button:hover{
+    opacity: 1;
+}
