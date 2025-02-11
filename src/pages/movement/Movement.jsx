@@ -26,7 +26,6 @@ const Movement = () => {
                     headers: { Authorization: `Bearer ${localStorage.getItem('userInfo')?.token || ''}` },
                     withCredentials: true,
                 });
-                console.log(response)
 
                 const data = Array.isArray(response.data) ? response.data : [];
 
@@ -50,10 +49,10 @@ const Movement = () => {
 
                 // Set default date range
                 const now = new Date();
-                const oneMonthago = new Date();
-                oneMonthago.setDate(now.getDate() - 30);
+                const oneMonthAgo = new Date();
+                oneMonthAgo.setDate(now.getDate() - 30);
 
-                const defaultStartDate = oneMonthago.toISOString().split('T')[0];
+                const defaultStartDate = oneMonthAgo.toISOString().split('T')[0];
                 const defaultEndDate = now.toISOString().split('T')[0];
 
                 setStartDate(defaultStartDate);
@@ -64,7 +63,7 @@ const Movement = () => {
                 const filteredData = products.map(product => {
                     const filteredMovements = product.movements.filter(movement => {
                         const movementDate = new Date(movement.createdAt);
-                        return movementDate >= oneMonthago && movementDate <= now;
+                        return movementDate >= oneMonthAgo && movementDate <= now;
                     });
 
                     return {
