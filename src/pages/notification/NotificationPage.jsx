@@ -191,7 +191,7 @@ const NotificationsComp = () => {
                     onClick={() => setActiveTab('created')}
                     className={`px-6 py-3 text-lg ${activeTab === 'created' ? 'bg-blue-500' : 'bg-gray-700'}`}
                 >
-                    Created Notifications
+                    All the Notifications
                 </Button>
                 <Button
                     onClick={() => setActiveTab('activated')}
