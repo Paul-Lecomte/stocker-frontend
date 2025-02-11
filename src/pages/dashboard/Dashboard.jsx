@@ -90,7 +90,7 @@ const Dashboard = () => {
                     : "#101923"
             }}
         >
-            <Typography variant="h2" className="text-blue-400 mb-4">Dashboard</Typography>
+            <Typography variant="h2" className="text-blue-400 mb-4 mt-4">Dashboard</Typography>
 
             <div className="flex space-x-6">
                 <Card className="text-center p-6 w-40" style={{ background: "#212D3B", color: "#FFFFFF" }}>
