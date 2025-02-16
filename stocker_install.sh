@@ -52,6 +52,16 @@ fi
 cd ..
 
 echo "Installation complete!"
+echo "Please enter the information needed in the .env file and then press Y to proceed"
+# Wait for user confirmation
+while true; do
+    read -p "Have you completed the .env setup? (Y/N): " choice
+    case "$choice" in
+        [Yy]* ) break;;
+        [Nn]* ) echo "Please complete the .env file before proceeding.";;
+        * ) echo "Please answer Y to continue or N to cancel.";;
+    esac
+done
 echo "Starting backend and frontend..."
 
 # Start backend in the background
