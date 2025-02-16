@@ -20,14 +20,6 @@ export const NotificationProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Frontend connected to Socket.IO server');
-        });
-
-        socket.on('disconnect', () => {
-            console.log('Frontend disconnected from Socket.IO server');
-        });
-
         socket.on('stock-level-notification', (data) => {
             const { message, furnitureId, furnitureName, threshold } = data;
 
